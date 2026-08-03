@@ -30,6 +30,110 @@ function renderMarkdown(md) {
   return DOMPurify.sanitize(html);
 }
 
+// ----------------------------------------------------------------
+// GitHub 趋势：首页紧凑榜单（排名+项目+Star，无注解），点击展开完整信息
+function esc(s) {
+  return (s || "").replace(/[&<>"]/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;",
+  }[c]));
+}
+
+function parseRow(cells, kind) {
+  const rank = cells[0];
+  const proj = cells[1];
+  const pm = proj.match(/\[([^\]]+)\]\(([^)]+)\)/);
+  const repo = pm ? pm[1].trim() : proj;
+  const url = pm ? pm[2].trim() : "#";
+  const dm = proj.match(/repo-desc"[^>]*>(.*?)<\/span>/);
+  const repoDesc = dm ? dm[1].trim() : "";
+  let added, total = null;
+  if (kind === "本周榜") {
+    total = cells[2];
+    added = cells[3];
+  } else {
+    added = cells[2];
+  }
+  const note = cells[cells.length - 1];
+  return { rank, repo, url, repoDesc, added, total, note };
+}
+
+function renderBoard(chunk, kind) {
+  const headM = chunk.match(/^##\s*(.+)$/m);
+  const title = headM ? headM[1].trim() : kind;
+  const quoteM = chunk.match(/^>\s*(.+)$/m);
+  const intro = quoteM ? quoteM[1].trim() : "";
+  const commentM = chunk.match(/\*\*([^*]+)\*\*[：:]\s*([\s\S]*?)(?=\n##|$)/);
+  const comment = commentM ? commentM[2].trim() : "";
+
+  const rows = [];
+  chunk.split("\n").forEach((line) => {
+    if (!/^\|\s*\d+\s*\|/.test(line)) return;
+    let cells = line.split("|").slice(1);
+    if (cells.length && cells[cells.length - 1].trim() === "") cells.pop();
+    cells = cells.map((c) => c.trim());
+    if (!/^\d+$/.test(cells[0])) return; // 跳过表头
+    rows.push(parseRow(cells, kind));
+  });
+
+  const starLabel = kind === "本周榜" ? "本周新增" : "今日新增";
+  const rowHtml = rows
+    .map((r) => {
+      const star =
+        `<b class="gh-star-num">${esc(r.added)}</b>` +
+        `<span class="gh-star-sub">${starLabel}</span>` +
+        (kind === "本周榜" && r.total
+          ? `<span class="gh-star-total">总 ${esc(r.total)}</span>`
+          : "");
+      return (
+        `<li class="gh-row">` +
+        `<span class="gh-rank">${esc(r.rank)}</span>` +
+        `<div class="gh-main">` +
+        `<a class="gh-repo" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.repo)}</a>` +
+        (r.repoDesc ? `<span class="gh-desc">${esc(r.repoDesc)}</span>` : "") +
+        (r.note ? `<p class="gh-note">${esc(r.note)}</p>` : "") +
+        `</div>` +
+        `<span class="gh-star">${star}</span>` +
+        `</li>`
+      );
+    })
+    .join("");
+
+  return (
+    `<div class="gh-board" data-expanded="false">` +
+    `<div class="gh-board-head">` +
+    `<span class="gh-board-title">${esc(title)}</span>` +
+    `<button class="gh-toggle" type="button">展开完整注解 ▾</button>` +
+    `</div>` +
+    (intro ? `<p class="gh-intro">${esc(intro)}</p>` : "") +
+    `<ul class="gh-list">${rowHtml}</ul>` +
+    (comment
+      ? `<p class="gh-comment"><strong>${esc(commentM[1])}：</strong>${esc(comment)}</p>`
+      : "") +
+    `</div>`
+  );
+}
+
+function renderGithub(md) {
+  if (!md || !md.trim()) return '<p class="loading">今日尚未更新</p>';
+  const idxWeek = md.search(/^##\s*二、/m);
+  const todayChunk = idxWeek >= 0 ? md.slice(0, idxWeek) : md;
+  const weekChunk = idxWeek >= 0 ? md.slice(idxWeek) : "";
+  let html = renderBoard(todayChunk, "今日榜");
+  if (weekChunk.trim()) html += renderBoard(weekChunk, "本周榜");
+  return html;
+}
+
+function bindGithubToggles() {
+  document.querySelectorAll("#gh-content .gh-toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const board = btn.closest(".gh-board");
+      const expanded = board.getAttribute("data-expanded") === "true";
+      board.setAttribute("data-expanded", String(!expanded));
+      btn.textContent = !expanded ? "收起完整注解 ▴" : "展开完整注解 ▾";
+    });
+  });
+}
+
 function render() {
   const date = state.current;
   const entry = state.entries[date] || {};
@@ -39,7 +143,8 @@ function render() {
   const ai = entry.aiNews;
   const gh = entry.github;
   document.getElementById("ai-content").innerHTML = renderMarkdown(ai && ai.markdown);
-  document.getElementById("gh-content").innerHTML = renderMarkdown(gh && gh.markdown);
+  document.getElementById("gh-content").innerHTML = renderGithub(gh && gh.markdown);
+  bindGithubToggles();
   document.getElementById("ai-time").textContent = ai ? fmtTime(ai.generatedAt) : "暂无";
   document.getElementById("gh-time").textContent = gh ? fmtTime(gh.generatedAt) : "暂无";
 

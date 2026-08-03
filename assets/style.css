@@ -129,6 +129,67 @@ body {
   color: var(--muted);
 }
 
+/* GitHub 趋势：首页紧凑榜单（排名+项目+Star），点击展开完整注解 */
+.gh-board {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 14px 0;
+  background: #fff;
+}
+.gh-board:first-child { margin-top: 0; }
+.gh-board-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 4px;
+}
+.gh-board-title { font-size: 15.5px; font-weight: 700; color: #16203a; }
+.gh-toggle {
+  border: 1px solid var(--gh); background: #fff7e8; color: #b45309;
+  padding: 4px 12px; border-radius: 999px; cursor: pointer;
+  font-size: 12.5px; font-weight: 600; transition: .15s; white-space: nowrap;
+}
+.gh-toggle:hover { background: #fdeccb; }
+.gh-intro { margin: 4px 0 10px; font-size: 12.5px; color: var(--muted); }
+.gh-list { list-style: none; margin: 0; padding: 0; }
+.gh-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-top: 1px solid var(--line);
+}
+.gh-row:first-child { border-top: none; }
+.gh-rank {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 7px;
+  background: #fff4e0; color: #b45309; font-weight: 700; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.gh-main { flex: 1; min-width: 0; }
+.gh-repo {
+  color: var(--accent); font-weight: 600; font-size: 14.5px;
+  text-decoration: none; word-break: break-all;
+}
+.gh-repo:hover { text-decoration: underline; }
+.gh-desc {
+  display: block; margin-top: 2px; font-size: 12.5px;
+  color: var(--muted); line-height: 1.5;
+}
+.gh-note {
+  display: none; margin: 6px 0 0; font-size: 13px; line-height: 1.7;
+  color: #46506a; background: #f8fafc; border-radius: 8px; padding: 8px 10px;
+}
+.gh-star {
+  flex-shrink: 0; text-align: right; display: flex; flex-direction: column;
+  align-items: flex-end; gap: 1px; line-height: 1.25;
+}
+.gh-star-num { color: #b45309; font-size: 15px; font-weight: 700; }
+.gh-star-sub { font-size: 11px; color: var(--muted); }
+.gh-star-total { font-size: 11px; color: var(--muted); }
+.gh-comment {
+  display: none; margin: 10px 0 0; padding: 10px 12px;
+  background: #fff7e8; border-left: 3px solid var(--gh);
+  border-radius: 0 8px 8px 0; font-size: 13px; color: #5b4310; line-height: 1.7;
+}
+.gh-board[data-expanded="true"] .gh-note { display: block; }
+.gh-board[data-expanded="true"] .gh-comment { display: block; }
+
 /* AI 新闻：标题用蓝色，正文保持黑色 */
 #ai-content h3 { color: var(--accent); }
 #ai-content h3:hover { color: var(--accent-strong); }
@@ -254,4 +315,16 @@ body {
   .date-chip { font-size: 12px; padding: 5px 11px; }
   .repo-desc { font-size: 11.5px; }
   .site-footer { font-size: 12px; padding: 6px 14px 24px; }
+
+  /* 紧凑榜单手机端：Star 换行到下方，避免挤压项目名 */
+  .gh-board { padding: 12px; border-radius: 10px; }
+  .gh-board-title { font-size: 14px; }
+  .gh-row { gap: 10px; flex-wrap: wrap; }
+  .gh-rank { width: 24px; height: 24px; font-size: 12px; }
+  .gh-main { flex: 1 1 auto; min-width: 0; }
+  .gh-star {
+    flex-basis: 100%; flex-direction: row; align-items: baseline;
+    justify-content: flex-start; gap: 8px; margin-top: 2px;
+  }
+  .gh-star-num { font-size: 14px; }
 }
