@@ -306,7 +306,7 @@ def render(date, ai_items, gh_items, out_path):
         d.text((W - PAD - bw - 15, y + 15), badge, font=f(22, True), fill=color)
         return y + SEC_H
 
-    y = section(y, AI_C, "今日 AI 要闻", "%d 条" % len(ai_items))
+    y = section(y, AI_C, "近期 AI 要闻", "%d 条" % len(ai_items))
 
     # ================= AI 新闻卡片
     for i, (it, (t_lines, s_lines, ch)) in enumerate(zip(ai_items, ai_m), 1):
