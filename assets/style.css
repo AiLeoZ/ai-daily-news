@@ -115,6 +115,13 @@ body {
 .content tbody tr:nth-child(even) { background: #fbfcfe; }
 .loading { color: var(--muted); }
 
+/* GitHub 趋势「项目」列下的简短简介 */
+.repo-desc {
+  display: block; margin-top: 4px;
+  font-size: 12px; font-weight: 400; line-height: 1.45;
+  color: var(--muted);
+}
+
 /* AI 新闻：标题用蓝色，正文保持黑色 */
 #ai-content h3 { color: var(--accent); }
 #ai-content h3:hover { color: var(--accent-strong); }
