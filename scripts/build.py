@@ -137,8 +137,8 @@ def render_day_html(date, entry, asset_rel):
     <p>本页为 {fmt_date(date)} 的独立归档，由自动化流程每日生成。</p>
     {f'<p>联系：<a href="mailto:{CONTACT}">{CONTACT}</a></p>' if CONTACT else ''}
   </footer>
-</body>
-</html>"""
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {{\n    document.querySelectorAll('.content table').forEach(function(table) {{\n      var headers = Array.from(table.querySelectorAll('thead th')).map(function(th) {{ return th.textContent.trim(); }});\n      if (!headers.length) return;\n      table.querySelectorAll('tbody tr').forEach(function(row) {{\n        Array.from(row.children).forEach(function(td, i) {{\n          if (headers[i]) td.setAttribute('data-label', headers[i]);\n        }});\n      }});\n    }});\n  }});\n  </script>\n</body>\n</html>"""
 
 
 def render_history_html(dates):

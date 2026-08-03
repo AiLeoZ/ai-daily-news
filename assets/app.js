@@ -43,6 +43,19 @@ function render() {
   document.getElementById("ai-time").textContent = ai ? fmtTime(ai.generatedAt) : "暂无";
   document.getElementById("gh-time").textContent = gh ? fmtTime(gh.generatedAt) : "暂无";
 
+  // 给 GitHub 表格 td 补上移动端 data-label
+  requestAnimationFrame(() => {
+    document.querySelectorAll(".content table").forEach((table) => {
+      const headers = Array.from(table.querySelectorAll("thead th")).map((th) => th.textContent.trim());
+      if (!headers.length) return;
+      table.querySelectorAll("tbody tr").forEach((row) => {
+        Array.from(row.children).forEach((td, i) => {
+          if (headers[i]) td.setAttribute("data-label", headers[i]);
+        });
+      });
+    });
+  });
+
   const isLatest = date === state.dates[0];
   document.getElementById("latest-btn").hidden = isLatest;
 
