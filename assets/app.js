@@ -46,6 +46,10 @@ function render() {
   const isLatest = date === state.dates[0];
   document.getElementById("latest-btn").hidden = isLatest;
 
+  // 只有「最新」日期才显示「今日海报」入口
+  const posterLink = document.getElementById("poster-link");
+  if (posterLink) posterLink.hidden = !isLatest;
+
   // 高亮当前日期 + 同步下拉选择
   document.querySelectorAll(".date-chip").forEach((chip) => {
     chip.classList.toggle("active", chip.dataset.date === date);

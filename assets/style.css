@@ -58,6 +58,13 @@ body {
   transition: .15s;
 }
 .latest-btn:hover { background: var(--accent-soft); }
+.poster-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 1px solid var(--line); background: #fff; color: var(--accent);
+  padding: 5px 13px; border-radius: 999px; cursor: pointer; font-size: 13px;
+  text-decoration: none; transition: .15s;
+}
+.poster-btn:hover { background: var(--accent-soft); text-decoration: none; }
 
 /* Layout (单栏上下顺序) */
 .layout {
