@@ -149,7 +149,12 @@ body {
   font-size: 12.5px; font-weight: 600; transition: .15s; white-space: nowrap;
 }
 .gh-toggle:hover { background: #fdeccb; }
-.gh-intro { margin: 4px 0 10px; font-size: 12.5px; color: var(--muted); }
+/* 榜单「看点」：默认收起，点「展开完整注解」后才出现 */
+.gh-intro {
+  display: none; margin: 10px 0 0; padding: 10px 12px;
+  background: #fff7e8; border-left: 3px solid var(--gh);
+  border-radius: 0 8px 8px 0; font-size: 13px; color: #5b4310; line-height: 1.7;
+}
 .gh-list { list-style: none; margin: 0; padding: 0; }
 .gh-row {
   display: flex; align-items: center; gap: 12px;
@@ -163,8 +168,10 @@ body {
 }
 .gh-main { flex: 1; min-width: 0; }
 .gh-repo {
-  color: var(--accent); font-weight: 600; font-size: 14.5px;
-  text-decoration: none; word-break: break-all;
+  display: block; color: var(--accent); font-weight: 600; font-size: 14.5px;
+  text-decoration: none;
+  /* 始终单行，过长用省略号，避免各行高度参差不齐 */
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .gh-repo:hover { text-decoration: underline; }
 .gh-desc {
@@ -189,6 +196,7 @@ body {
 }
 .gh-board[data-expanded="true"] .gh-note { display: block; }
 .gh-board[data-expanded="true"] .gh-comment { display: block; }
+.gh-board[data-expanded="true"] .gh-intro { display: block; }
 
 /* AI 新闻：标题用蓝色，正文保持黑色 */
 #ai-content h3 { color: var(--accent); }
@@ -322,6 +330,13 @@ body {
   .gh-row { gap: 10px; flex-wrap: wrap; }
   .gh-rank { width: 24px; height: 24px; font-size: 12px; }
   .gh-main { flex: 1 1 auto; min-width: 0; }
+  /* 项目名恒定单行（过长省略），简介最多两行，保证每行卡片高度一致 */
+  .gh-repo { font-size: 13.5px; }
+  .gh-desc {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .gh-intro { font-size: 12.5px; padding: 9px 11px; }
   .gh-star {
     flex-basis: 100%; flex-direction: row; align-items: baseline;
     justify-content: flex-start; gap: 8px; margin-top: 2px;

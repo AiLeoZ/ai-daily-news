@@ -88,7 +88,7 @@ function renderBoard(chunk, kind) {
         `<li class="gh-row">` +
         `<span class="gh-rank">${esc(r.rank)}</span>` +
         `<div class="gh-main">` +
-        `<a class="gh-repo" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.repo)}</a>` +
+        `<a class="gh-repo" href="${esc(r.url)}" target="_blank" rel="noopener" title="${esc(r.repo)}">${esc(r.repo)}</a>` +
         (r.repoDesc ? `<span class="gh-desc">${esc(r.repoDesc)}</span>` : "") +
         (r.note ? `<p class="gh-note">${esc(r.note)}</p>` : "") +
         `</div>` +
@@ -104,11 +104,12 @@ function renderBoard(chunk, kind) {
     `<span class="gh-board-title">${esc(title)}</span>` +
     `<button class="gh-toggle" type="button">展开完整注解 ▾</button>` +
     `</div>` +
+    `<ul class="gh-list">${rowHtml}</ul>` +
+    // 「看点 / 趋势点评」跟随展开状态显示，位置放在榜单之后，阅读顺序与原文一致
     (intro ? `<p class="gh-intro">${esc(intro)}</p>` : "") +
     (comment
       ? `<p class="gh-comment"><strong>${esc(commentM[1])}：</strong>${esc(comment)}</p>`
       : "") +
-    `<ul class="gh-list">${rowHtml}</ul>` +
     `</div>`
   );
 }
