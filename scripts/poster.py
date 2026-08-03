@@ -5,9 +5,9 @@ poster.py —— 由每日 feed.json 生成一张可直接发社交媒体的竖�
 
 版式（深色科技风）：
   · 顶部：品牌标题 + 日期；右上角二维码，标注「扫码查看详情」
-  · 今日 AI 要闻 TOP 5（标题 + 一句话摘要）
-  · GitHub 今日趋势 TOP 5（项目 + 今日新增 Star + 极简介绍）
-  · 底部：站点署名条
+  · 今日 AI 要闻（最多 10 条，主篇幅：标题 + 一句话摘要）
+  · GitHub 今日趋势 TOP 3（项目 + 今日新增 Star + 极简介绍）
+  · 底部：引导扫码条
 
 用法：
   python scripts/poster.py                 # 用 feed.json 里最新的日期
@@ -268,7 +268,7 @@ def render(date, ai_items, gh_items, out_path):
            font=f(29), fill=(191, 214, 255))
     # 细分隔线
     d.line([(PAD, 212), (PAD + 92, 212)], fill=AI_C, width=4)
-    d.text((PAD, 232), "每日 AI 新闻 · GitHub 趋势  自动更新", font=f(24), fill=SUB)
+    d.text((PAD, 232), "每日 AI 新闻 · GitHub 趋势  每日更新", font=f(24), fill=SUB)
 
     # 右上角二维码
     qx = W - PAD - QR_SIZE - 20
@@ -292,7 +292,7 @@ def render(date, ai_items, gh_items, out_path):
         d.text((W - PAD - bw - 15, y + 15), badge, font=f(22, True), fill=color)
         return y + SEC_H
 
-    y = section(y, AI_C, "今日 AI 要闻", "TOP 5")
+    y = section(y, AI_C, "今日 AI 要闻", "%d 条" % len(ai_items))
 
     # ================= AI 新闻卡片
     for i, (it, (t_lines, s_lines, ch)) in enumerate(zip(ai_items, ai_m), 1):
@@ -321,7 +321,7 @@ def render(date, ai_items, gh_items, out_path):
         y += ch + CARD_GAP
 
     y += 30
-    y = section(y, GH_C, "GitHub 今日趋势", "TOP 5")
+    y = section(y, GH_C, "GitHub 今日趋势", "TOP %d" % len(gh_items))
 
     # ================= GitHub 卡片
     for it, (r_lines, de_lines, sw, ch) in zip(gh_items, gh_m):
@@ -348,12 +348,12 @@ def render(date, ai_items, gh_items, out_path):
 
         y += ch + CARD_GAP
 
-    # ================= 底部署名
+    # ================= 底部引导
     y += 20
     d.line([(PAD, y), (W - PAD, y)], fill=(45, 58, 88), width=1)
-    d.text((PAD, y + 26), "AI 每日资讯", font=f(26, True), fill=(255, 255, 255))
-    d.text((PAD, y + 62), "每天 24:00 自动更新 · 扫描右上角二维码查看完整内容",
-           font=f(21), fill=MUTED)
+    tip = "更多 AI 资讯请扫描右上角二维码"
+    tw = d.textlength(tip, font=f(26, True))
+    d.text(((W - tw) / 2, y + 38), tip, font=f(26, True), fill=(255, 255, 255))
 
     img = img.convert("RGB")
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -365,13 +365,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", default=None, help="日期 YYYY-MM-DD，默认取 feed.json 最新")
     ap.add_argument("--out", default=None, help="输出路径，默认 output/poster/<date>.png")
+    ap.add_argument("--ai-limit", type=int, default=10, help="AI 新闻最多显示条数（默认 10）")
+    ap.add_argument("--gh-limit", type=int, default=3, help="GitHub 趋势显示条数（默认 3）")
     args = ap.parse_args()
 
     date, entry = read_feed(args.date)
     ai_md = (entry.get("aiNews") or {}).get("markdown", "")
     gh_md = (entry.get("github") or {}).get("markdown", "")
-    ai_items = parse_ai_news(ai_md, 5)
-    gh_items = parse_github(gh_md, 5)
+    ai_items = parse_ai_news(ai_md, args.ai_limit)
+    gh_items = parse_github(gh_md, args.gh_limit)
     if len(ai_items) < 1 or len(gh_items) < 1:
         raise SystemExit("解析失败：AI %d 条 / GitHub %d 条" % (len(ai_items), len(gh_items)))
 
