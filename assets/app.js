@@ -105,10 +105,10 @@ function renderBoard(chunk, kind) {
     `<button class="gh-toggle" type="button">展开完整注解 ▾</button>` +
     `</div>` +
     (intro ? `<p class="gh-intro">${esc(intro)}</p>` : "") +
-    `<ul class="gh-list">${rowHtml}</ul>` +
     (comment
       ? `<p class="gh-comment"><strong>${esc(commentM[1])}：</strong>${esc(comment)}</p>`
       : "") +
+    `<ul class="gh-list">${rowHtml}</ul>` +
     `</div>`
   );
 }
