@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 每日资讯 · AI News & GitHub Trending</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <h1>AI 每日资讯</h1>
+        <p class="subtitle">每天追踪最新 AI 动态与 GitHub 趋势 · 自动更新</p>
+      </div>
+      <div class="header-meta">
+        <span id="viewing-date" class="viewing-date">—</span>
+        <button id="latest-btn" class="latest-btn" hidden>← 回到最新</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="section" id="section-ai">
+      <div class="section-head">
+        <span class="dot dot-ai"></span>
+        <h2>AI 新闻</h2>
+        <span id="ai-time" class="gen-time"></span>
+      </div>
+      <article id="ai-content" class="content card">
+        <p class="loading">加载中…</p>
+      </article>
+    </section>
+
+    <section class="section" id="section-gh">
+      <div class="section-head">
+        <span class="dot dot-gh"></span>
+        <h2>GitHub 趋势</h2>
+        <span id="gh-time" class="gen-time"></span>
+      </div>
+      <article id="gh-content" class="content card">
+        <p class="loading">加载中…</p>
+      </article>
+    </section>
+  </main>
+
+  <section class="history">
+    <div class="history-inner">
+      <div class="history-head">
+        <h3>历史记录</h3>
+        <select id="history-select" class="history-select" aria-label="选择历史日期">
+          <option>加载日期中…</option>
+        </select>
+      </div>
+      <div class="history-ymd">
+        <span class="ymd-label">按年 / 月 / 日 精确查找：</span>
+        <select id="ymd-year" class="ymd-select" aria-label="年"></select>
+        <select id="ymd-month" class="ymd-select" aria-label="月"></select>
+        <select id="ymd-day" class="ymd-select" aria-label="日"></select>
+      </div>
+      <div id="history-bar" class="history-bar">
+        <span class="loading">加载日期中…</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>AI 新闻更新于每日 23:59</p>
+    <p>GitHub 趋势参考 GitHub Trending (<a href="https://github.com/trending" target="_blank" rel="noopener">github.com/trending</a>)</p>
+    <p>📚 <a href="output/history.html">历史归档（每日独立页面）</a></p>
+    <p>网页建议与其他事项请联系：<a href="mailto:zhuleo@agent.qq.com">zhuleo@agent.qq.com</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

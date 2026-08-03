@@ -1,0 +1,14 @@
+# 资讯源定义 —— API / 抓取接口
+# 当前主要依赖 GitHub Trending 页面（无官方 API，采用页面抓取）。
+# 如需接入 GitHub 官方 API（更高频/稳定），可填 token 后改用 api.github.com。
+
+github_trending:
+  daily: "https://github.com/trending?since=daily"
+  weekly: "https://github.com/trending?since=weekly"
+  top_n: 10
+  enabled: true
+  # 可选：GitHub Personal Access Token（留空则用匿名抓取）
+  token: ""
+
+# 预留：可在此扩展其他 API 源（如 arXiv API、NewsAPI 等）
+extra_apis: []

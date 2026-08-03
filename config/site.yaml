@@ -1,0 +1,32 @@
+# AI 每日资讯 —— 站点配置（声明式，改这里即改站）
+# 说明：本文件由 scripts/ 下的生成脚本读取；修改后重新运行 build 即生效。
+
+# 站点基础信息
+title: "AI 每日资讯"
+subtitle: "每天追踪最新 AI 动态与 GitHub 趋势 · 自动更新"
+language: "zh-CN"
+contact_email: "zhuleo@agent.qq.com"
+
+# 更新频率（用于页脚展示与调度提示，实际调度由云端定时任务控制）
+update_time: "23:59"
+update_cron: "FREQ=DAILY;BYHOUR=23;BYMINUTE=59"
+
+# 展示板块（顺序即网页展示顺序）
+sections:
+  - aiNews
+  - github
+
+# 各板块中文名（渲染标题用）
+section_titles:
+  aiNews: "AI 新闻"
+  github: "GitHub 趋势"
+
+# 主题（十六进制色值；会被 assets/style.css 的变量覆盖，这里仅作归档页内联兜底）
+theme:
+  accent: "#4f7cff"
+  bg: "#f6f8fb"
+  text: "#1f2430"
+  card: "#ffffff"
+
+# 单日内容上限（筛选阶段 Top-N）
+max_items_per_day: 10

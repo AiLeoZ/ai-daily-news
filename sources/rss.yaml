@@ -1,0 +1,14 @@
+# 资讯源定义 —— RSS 订阅源
+# 每行格式： 名称 || RSS地址 || 分类
+# collect.py 会拉取这些源，提取近 7 天条目作为 AI 新闻的候选素材。
+# 分类（category）仅用于标注，不参与筛选逻辑。
+
+feeds:
+  - "ArXiv cs.AI || https://arxiv.org/rss/cs.AI || research"
+  - "The Verge AI || https://www.theverge.com/rss/ai-artificial-intelligence/index.xml || news"
+  - "TechCrunch AI || https://techcrunch.com/category/artificial-intelligence/feed/ || news"
+  - "MIT Tech Review AI || https://www.technologyreview.com/topic/artificial-intelligence/feed || news"
+  - "Google Research Blog || https://research.google/blog/rss/ || research"
+  - "Hugging Face Blog || https://huggingface.co/blog/feed.xml || research"
+  - "机器之心 || https://www.jiqizhixin.com/rss || news"
+  - "量子位 || https://www.qbitai.com/feed || news"
