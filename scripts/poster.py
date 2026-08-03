@@ -5,7 +5,7 @@ poster.py —— 由每日 feed.json 生成一张可直接发社交媒体的竖�
 
 版式（深色科技风）：
   · 顶部：品牌标题 + 日期；右上角二维码，标注「扫码查看详情」
-  · 今日 AI 要闻（最多 10 条，主篇幅：完整标题，无下方注解）
+  · 今日 AI 要闻（最多 10 条，主篇幅：短标题 + 一句话摘要）
   · GitHub 今日趋势 TOP 3（项目 + 今日新增 Star + 极简介绍）
   · 底部：引导扫码条
 
@@ -98,8 +98,48 @@ def clean(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
+def first_sentence(text):
+    """取第一句（以句号/叹号/问号/换行截断），保证概要简短。"""
+    for sep in "。！？\n":
+        idx = text.find(sep)
+        if 0 < idx:
+            return text[:idx]
+    return text
+
+
+def shorten_title(title):
+    """海报用短标题：截到第一个主要分隔符即可，详细表述留给扫码后的正文。
+
+    例：「阿里发布 Qwen3.8-Max：2.4 万亿参数，下周首次开源 Max 级权重」
+        →「阿里发布 Qwen3.8-Max」
+    """
+    t = re.sub(r"\s+", " ", title).strip()
+    # 去掉结尾的括号补充说明
+    t = re.sub(r"[（(][^（()）]*[)）]\s*$", "", t).strip()
+    cuts = [t.find(s) for s in "：:，,；;"]
+    cuts += [t.find("——")]
+    cuts = [c for c in cuts if c >= 6]
+    if cuts:
+        t = t[: min(cuts)].strip()
+    return t.rstrip("：:，,；;、—- ") or title
+
+
+def pick_summary(block):
+    """优先取「注解 / 为什么关注 / 简述」等概括性短句的第一句；
+    都没有时退回首段第一句。目标是「概括性的简单介绍」，而非全文。"""
+    for kw in ("注解", "为什么关注", "简述", "摘要"):
+        m = re.search(r"\*\*" + kw + r"\*\*[：:]\s*(.+)", block)
+        if m:
+            return first_sentence(clean(m.group(1)))
+    lines = [l.strip() for l in block.strip().split("\n")]
+    for l in lines[1:]:
+        if l and not l.startswith(("-", "*", "#", ">", "|")):
+            return first_sentence(clean(l))
+    return ""
+
+
 def parse_ai_news(md, limit=5):
-    """海报 AI 要闻：仅保留完整标题（含日期标签），不再抽取下方注解/简介。"""
+    """海报 AI 要闻：短标题 + 完整一句话摘要；详细标题可扫码查看正文。"""
     items = []
     blocks = re.split(r"^###\s+", md, flags=re.M)[1:]
     for block in blocks:
@@ -113,7 +153,8 @@ def parse_ai_news(md, limit=5):
         if m:
             date_tag = m.group(1).replace(" ", "")
             title = title[: m.start()].strip()
-        items.append({"title": title, "date": date_tag})
+        summary = pick_summary(block)
+        items.append({"title": shorten_title(title), "summary": summary, "date": date_tag})
         if len(items) >= limit:
             break
     return items
@@ -221,12 +262,15 @@ FOOT_H = 108
 
 
 def measure_ai(items):
-    """预先量出 AI 卡片高度，便于精确定高。标题完整保留、最多 3 行、不截断。"""
+    """预先量出 AI 卡片高度，便于精确定高。"""
     tx_w = W - (PAD + 92) - PAD - 26
     out = []
     for it in items:
-        t = wrap(it["title"], f(31, True), tx_w, 3, ellipsis=False)
-        out.append((t, 28 + len(t) * 41 + 22))
+        # 标题只占一行（已在解析阶段压短），把版面让给下方简介
+        t = wrap(it["title"], f(31, True), tx_w - 130, 1)
+        # 简介放宽到 3 行，保证一句话能说完整
+        s = wrap(it["summary"], f(23), tx_w, 3)
+        out.append((t, s, 28 + len(t) * 41 + (len(s) * 33 if s else 0) + 22))
     return out
 
 
@@ -243,7 +287,7 @@ def measure_gh(items):
 def render(date, ai_items, gh_items, out_path):
     ai_m = measure_ai(ai_items)
     gh_m = measure_gh(gh_items)
-    total = (HEAD_H + 34 + SEC_H + sum(m[1] + CARD_GAP for m in ai_m)
+    total = (HEAD_H + 34 + SEC_H + sum(m[2] + CARD_GAP for m in ai_m)
              + 30 + SEC_H + sum(m[3] + CARD_GAP for m in gh_m) + 24 + FOOT_H)
 
     img = vgradient((W, total), BG_TOP, BG_BOT).convert("RGBA")
@@ -285,8 +329,8 @@ def render(date, ai_items, gh_items, out_path):
 
     y = section(y, AI_C, "近期 AI 要闻", "%d 条" % len(ai_items))
 
-    # ================= AI 新闻卡片（仅展示完整标题）
-    for i, (it, (t_lines, ch)) in enumerate(zip(ai_items, ai_m), 1):
+    # ================= AI 新闻卡片（短标题 + 完整一句话摘要）
+    for i, (it, (t_lines, s_lines, ch)) in enumerate(zip(ai_items, ai_m), 1):
         d.rounded_rectangle([PAD, y, W - PAD, y + ch], radius=20,
                             fill=CARD, outline=CARD_LINE, width=1)
         d.rounded_rectangle([PAD, y + 18, PAD + 5, y + ch - 18], radius=3, fill=AI_DEEP)
@@ -305,6 +349,10 @@ def render(date, ai_items, gh_items, out_path):
             d.rounded_rectangle([W - PAD - dw - 34, y + 26, W - PAD - 16, y + 60],
                                 radius=11, fill=(30, 58, 138))
             d.text((W - PAD - dw - 25, y + 32), it["date"], font=f(20), fill=(191, 219, 254))
+        ty += 4
+        for line in s_lines:
+            d.text((tx, ty), line, font=f(23), fill=SUB)
+            ty += 33
         y += ch + CARD_GAP
 
     y += 30
