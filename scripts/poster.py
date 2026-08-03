@@ -29,7 +29,15 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FEED = os.path.join(ROOT, "data", "feed.json")
 OUT_DIR = os.path.join(ROOT, "output", "poster")
-SITE_URL = "https://3a2c7e71a31748508dbe8b75e7cdeca9.bj7.agentos-app.net"
+
+# 公开站点地址：优先取自 config/site.yaml 的 site_url，缺失时回退默认值。
+try:
+    from yamlutil import load_file
+    _SITE_CFG = load_file(os.path.join(ROOT, "config", "site.yaml")) or {}
+except Exception:
+    _SITE_CFG = {}
+SITE_URL = (_SITE_CFG.get("site_url")
+            or "https://3a2c7e71a31748508dbe8b75e7cdeca9.bj7.agentos-app.net")
 
 # ---------------------------------------------------------------- 视觉规范
 W = 1080                          # 画布宽（竖版社媒尺寸）

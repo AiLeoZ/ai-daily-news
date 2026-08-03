@@ -6,6 +6,8 @@ title: "AI 每日资讯"
 subtitle: "每天追踪最新 AI 动态与 GitHub 趋势 · 每日更新"
 language: "zh-CN"
 contact_email: "zhuleo@agent.qq.com"
+# 公开站点地址（海报二维码指向此处；重新部署换域名后改这一行即可，无需改代码）
+site_url: "https://3a2c7e71a31748508dbe8b75e7cdeca9.bj7.agentos-app.net"
 
 # 更新频率（用于页脚展示与调度提示，实际调度由云端定时任务控制）
 update_time: "23:59"

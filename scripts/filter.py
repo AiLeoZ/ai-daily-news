@@ -46,13 +46,53 @@ def count_items(md, section=None):
     return len(re.findall(r"^###\s", md, re.M))
 
 
-def extract_dates(md):
-    # 匹配 ### 标题后的（YYYY-MM-DD）或（M月D日）
+def extract_dates(md, year=None):
+    # 匹配 ### 标题后的（YYYY-MM-DD）或（M月D日），归一化为 YYYY-MM-DD
     found = re.findall(r"（\s*(\d{4}-\d{2}-\d{2}|\d{1,2}月\d{1,2}日)\s*）", md)
-    return found
+    norm = []
+    for d in found:
+        m = re.match(r"(\d{4})-(\d{2})-(\d{2})", d)
+        if m:
+            norm.append(m.group(0))
+        else:
+            mm = re.match(r"(\d{1,2})月(\d{1,2})日", d)
+            if mm:
+                y = year or datetime.datetime.now().year
+                norm.append(f"{y}-{int(mm.group(1)):02d}-{int(mm.group(2)):02d}")
+    return norm
 
 
-def validate(md, max_items, section=None):
+def _check_ai_structure(md, n, warnings):
+    """AI 新闻结构校验（仅告警）：分类标题、必填字段、禁用措辞。"""
+    if "🔝 今日要闻" not in md:
+        warnings.append("缺少「## 🔝 今日要闻」分类标题")
+    if "近期其他要闻" not in md:
+        warnings.append("缺少「## 近期其他要闻」分类标题")
+    why = len(re.findall(r"\*\*为什么关注\*\*", md))
+    note = len(re.findall(r"\*\*注解\*\*", md))
+    if why < n:
+        warnings.append(f"「为什么关注」仅 {why} 处，少于条目数 {n}（可能缺项）")
+    if note < n:
+        warnings.append(f"「注解」仅 {note} 处，少于条目数 {n}（可能缺项）")
+    if "通俗解释" in md:
+        warnings.append("检测到「通俗解释」字样，注解应使用「注解」而非「通俗解释」")
+
+
+def _check_github_structure(md, warnings):
+    """GitHub 趋势结构校验（仅告警）：分类标题、repo-desc、禁用 since=。"""
+    if "## 一、今日榜" not in md:
+        warnings.append("缺少「## 一、今日榜」分类标题")
+    if "## 二、本周榜" not in md:
+        warnings.append("缺少「## 二、本周榜」分类标题")
+    if "since=" in md:
+        warnings.append("GitHub 标题中出现 since= 字样，应去掉")
+    rows = [l for l in md.splitlines() if re.match(r"^\|\s*\d+\s*\|", l)]
+    desc = md.count("repo-desc")
+    if rows and desc < len(rows):
+        warnings.append(f"项目列 repo-desc 仅 {desc} 处，少于表格数据行 {len(rows)}（可能缺简介）")
+
+
+def validate(md, max_items, section=None, date=None):
     warnings = []
     if not md.strip():
         return False, ["内容为空"]
@@ -65,20 +105,22 @@ def validate(md, max_items, section=None):
     if section == "aiNews" and n > max_items:
         warnings.append(f"条目数 {n} 超过上限 {max_items}，将截断")
     # 时间序检测（仅对带日期的 AI 新闻有意义）
-    dates = extract_dates(md)
-    norm = []
-    for d in dates:
-        m = re.match(r"(\d{4})-(\d{2})-(\d{2})", d)
-        if m:
-            norm.append(m.group(0))
-        else:
-            mm = re.match(r"(\d{1,2})月(\d{1,2})日", d)
-            if mm:
-                norm.append(f"2026-{int(mm.group(1)):02d}-{int(mm.group(2)):02d}")
-    for i in range(1, len(norm)):
-        if norm[i] > norm[i - 1]:
-            warnings.append(f"时间序异常：第 {i+1} 条日期 {norm[i]} 比前一条 {norm[i-1]} 更近")
+    year = None
+    if date:
+        try:
+            year = int(date.split("-")[0])
+        except Exception:
+            year = None
+    dates = extract_dates(md, year)
+    for i in range(1, len(dates)):
+        if dates[i] > dates[i - 1]:
+            warnings.append(f"时间序异常：第 {i+1} 条日期 {dates[i]} 比前一条 {dates[i-1]} 更近")
             break
+    # 结构校验（模型无关兜底：弱模型漏字段也能被发现）
+    if section == "aiNews":
+        _check_ai_structure(md, n, warnings)
+    elif section == "github":
+        _check_github_structure(md, warnings)
     return True, warnings
 
 
@@ -118,7 +160,7 @@ def aggregate(date, section, md, max_items):
 def process_file(date, section, path, max_items):
     with open(path, "r", encoding="utf-8") as f:
         md = f.read().strip()
-    ok, warns = validate(md, max_items, section)
+    ok, warns = validate(md, max_items, section, date)
     for w in warns:
         print(f"  [警告] {w}")
     if not ok:
