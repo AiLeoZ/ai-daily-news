@@ -2041,6 +2041,13 @@
     },
     {
       "source": "MIT Tech Review AI",
+      "title": "Here’s why AI agents lie and cheat to reach their goals",
+      "link": "https://www.technologyreview.com/2026/08/03/1141009/heres-why-ai-agents-lie-and-cheat-to-reach-their-goals/",
+      "published": "Mon, 03 Aug 2026 08:30:05 +0000",
+      "summary": "MIT Technology Review Explains: Let our writers untangle the complex, messy world of technology to help you understand what’s coming next. You can read more from the series here. When two OpenAI models hacked into the website Hugging Face in July, they weren’t trying to make money or commit sabotage—they were just looking for answers&#8230;"
+    },
+    {
+      "source": "MIT Tech Review AI",
       "title": "A fundamental flaw leaves LLMs strikingly vulnerable to attack",
       "link": "https://www.technologyreview.com/2026/07/30/1140927/a-fundamental-flaw-leaves-llms-vulnerable-to-attack/",
       "published": "Thu, 30 Jul 2026 10:15:19 +0000",
@@ -2114,13 +2121,6 @@
       "title": "LFM2.5-Encoders for Fast Long-Context Inference on CPU",
       "link": "https://huggingface.co/blog/LiquidAI/lfm2-5-encoders",
       "published": "Tue, 28 Jul 2026 15:01:45 GMT",
-      "summary": ""
-    },
-    {
-      "source": "Hugging Face Blog",
-      "title": "NVIDIA Cosmos-H-Dreams: Bringing Real-Time Generative Simulation to Surgical Robotics",
-      "link": "https://huggingface.co/blog/nvidia/cosmos-h-dreams",
-      "published": "Mon, 27 Jul 2026 09:32:20 GMT",
       "summary": ""
     },
     {
