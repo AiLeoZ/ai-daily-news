@@ -147,6 +147,42 @@ def parse_trending(html, period):
     return rows
 
 
+def find_fallback_gh(date_str):
+    """返回 date_str 之前最近的 gh_*.json 路径（不含当天）；没有则返回 None。"""
+    try:
+        d = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+    except Exception:
+        return None
+    cands = []
+    for fn in os.listdir(OUT):
+        m = re.match(r"^gh_(\d{4}-\d{2}-\d{2})\.json$", fn)
+        if not m or m.group(1) == date_str:
+            continue
+        try:
+            fd = datetime.datetime.strptime(m.group(1), "%Y-%m-%d").date()
+        except Exception:
+            continue
+        if fd < d:
+            cands.append((fd, os.path.join(OUT, fn)))
+    if not cands:
+        return None
+    cands.sort(key=lambda x: x[0], reverse=True)
+    return cands[0][1]
+
+
+def load_gh_period(fallback_path, period):
+    """从兜底文件读取某周期的榜单并重新编号；失败返回 []。"""
+    try:
+        with open(fallback_path, encoding="utf-8") as f:
+            data = json.load(f)
+        rows = [r for r in (data.get(period) or []) if isinstance(r, dict)]
+        for i, r in enumerate(rows):
+            r["rank"] = i + 1
+        return rows
+    except Exception:
+        return []
+
+
 def collect_github(date_str):
     from yamlutil import load_file
     cfg = load_file(os.path.join(SRC, "apis.yaml"))
@@ -163,6 +199,18 @@ def collect_github(date_str):
             out[period] = rows
         except Exception as e:
             out["errors"].append({"period": period, "error": f"{type(e).__name__}: {e}"})
+        # 兜底：当日抓取为空（网络失败或解析为 0 行）时，复用最近一次成功数据
+        if not out[period]:
+            fb = find_fallback_gh(date_str)
+            if fb:
+                rows = load_gh_period(fb, period)
+                if rows:
+                    out[period] = rows
+                    out["errors"].append({
+                        "period": period,
+                        "fallback": os.path.basename(fb),
+                        "note": "当日抓取为空，已复用最近一次成功的 GitHub 数据",
+                    })
     return out
 
 
