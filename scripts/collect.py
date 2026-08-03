@@ -115,10 +115,25 @@ def parse_trending(html, period):
         lang = lang.group(1).strip() if lang else ""
         desc = re.search(r'<p[^>]*>([^<]*)</p>', c)
         desc = re.sub(r"\s+", " ", desc.group(1)).strip() if desc else ""
-        total = re.search(r'([\d,]+)\s*stars', c)
-        total = int(total.group(1).replace(",", "")) if total else 0
-        gained = re.search(r'([\d,]+)\s*stars (today|this week)', c)
+        # 本期新增（"N stars today" / "N stars this week"）
+        gained = re.search(r'([\d,]+)\s*stars\s+(?:today|this week)', c)
         gained = int(gained.group(1).replace(",", "")) if gained else 0
+        # 总 Star：取 stargazers 链接内的数字（避免误抓"新增"数字）
+        total = re.search(r'href="/[^"]+/stargazers"[^>]*>(.*?)</a>', c, re.S)
+        if total:
+            # 先剥掉 <svg>…</svg>，否则会误抓 path 坐标里的数字
+            inner = re.sub(r"<svg.*?</svg>", " ", total.group(1), flags=re.S)
+            inner = re.sub(r"<[^>]+>", " ", inner)
+            num = re.search(r'([\d,]+(?:\.\d+)?k?)', inner.replace("\n", " ").strip(), re.I)
+            if num:
+                raw = num.group(1).replace(",", "")
+                total = int(float(raw[:-1]) * 1000) if raw.lower().endswith("k") else int(raw)
+            else:
+                total = 0
+        else:
+            total = 0
+        if total < gained:  # 兜底：总数不应小于新增
+            total = gained
         rows.append({
             "rank": len(rows) + 1,
             "repo": full,
