@@ -98,6 +98,29 @@ def clean(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
+def first_sentence(text):
+    """取第一句（以句号/叹号/问号/换行截断），保证概要简短。"""
+    for sep in "。！？\n":
+        idx = text.find(sep)
+        if 0 < idx:
+            return text[:idx]
+    return text
+
+
+def pick_summary(block):
+    """优先取「注解 / 为什么关注 / 简述」等概括性短句的第一句；
+    都没有时退回首段第一句。目标是「概括性的简单介绍」，而非全文。"""
+    for kw in ("注解", "为什么关注", "简述", "摘要"):
+        m = re.search(r"\*\*" + kw + r"\*\*[：:]\s*(.+)", block)
+        if m:
+            return first_sentence(clean(m.group(1)))
+    lines = [l.strip() for l in block.strip().split("\n")]
+    for l in lines[1:]:
+        if l and not l.startswith(("-", "*", "#", ">", "|")):
+            return first_sentence(clean(l))
+    return ""
+
+
 def parse_ai_news(md, limit=5):
     items = []
     blocks = re.split(r"^###\s+", md, flags=re.M)[1:]
@@ -112,16 +135,7 @@ def parse_ai_news(md, limit=5):
         if m:
             date_tag = m.group(1).replace(" ", "")
             title = title[: m.start()].strip()
-        summary = ""
-        for l in lines[1:]:
-            if not l or l.startswith(("-", "*", "#", ">", "|")):
-                continue
-            summary = clean(l)
-            break
-        if not summary:
-            m2 = re.search(r"\*\*注解\*\*[：:]\s*(.+)", block)
-            if m2:
-                summary = clean(m2.group(1))
+        summary = pick_summary(block)
         items.append({"title": title, "summary": summary, "date": date_tag})
         if len(items) >= limit:
             break
@@ -155,8 +169,8 @@ def parse_github(md, limit=5):
 _measure = ImageDraw.Draw(Image.new("RGB", (10, 10)))
 
 
-def wrap(text, font, max_w, max_lines=2, draw=None):
-    """按像素宽度折行（中英混排安全），超出用省略号收尾。"""
+def wrap(text, font, max_w, max_lines=2, draw=None, ellipsis=True):
+    """按像素宽度折行（中英混排安全）；ellipsis=False 时超长直接截断、不加省略号。"""
     d = draw or _measure
     if not text:
         return []
@@ -180,7 +194,7 @@ def wrap(text, font, max_w, max_lines=2, draw=None):
             break
     if len(lines) < max_lines and cur:
         lines.append(cur)
-    if len(lines) == max_lines:
+    if len(lines) == max_lines and ellipsis:
         if sum(len(l) for l in lines) < len(text):
             last = lines[-1]
             while last and d.textlength(last + "…", font=font) > max_w:
@@ -234,7 +248,7 @@ def measure_ai(items):
     out = []
     for it in items:
         t = wrap(it["title"], f(31, True), tx_w - 130, 2)
-        s = wrap(it["summary"], f(23), tx_w, 3)
+        s = wrap(it["summary"], f(23), tx_w, 2, ellipsis=False)
         out.append((t, s, 28 + len(t) * 41 + (len(s) * 33 if s else 0) + 22))
     return out
 
