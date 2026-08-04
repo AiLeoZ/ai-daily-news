@@ -165,7 +165,10 @@ _measure = ImageDraw.Draw(Image.new("RGB", (10, 10)))
 
 
 def wrap(text, font, max_w, max_lines=2, draw=None, ellipsis=True):
-    """按像素宽度折行（中英混排安全）；ellipsis=False 时超长直接截断、不加省略号。"""
+    """按像素宽度贪心逐字折行：每行尽量填满到 max_w 才换行，保证所有条目对齐与折行规则一致、不出现单行未满即另起一行。
+
+    ellipsis=False 时，超出 max_lines 的末尾内容直接截断（不追加省略号）。
+    """
     d = draw or _measure
     if not text:
         return []
@@ -175,27 +178,20 @@ def wrap(text, font, max_w, max_lines=2, draw=None, ellipsis=True):
         if d.textlength(trial, font=font) <= max_w:
             cur = trial
             continue
-        if ch.isalnum() and cur and cur[-1].isalnum() and " " in cur.strip():
-            cut = cur.rstrip().rfind(" ")
-            if cut > len(cur) * 0.5:
-                lines.append(cur[:cut])
-                cur = cur[cut + 1:] + ch
-                if len(lines) >= max_lines:
-                    break
-                continue
+        # 当前行已写到最宽，换行（cur 不含刚溢出的字符）
         lines.append(cur)
         cur = ch
         if len(lines) >= max_lines:
             break
-    if len(lines) < max_lines and cur:
-        lines.append(cur)
-    if len(lines) == max_lines and ellipsis:
-        # 英文折行会吃掉一个空格，故忽略空格再比较，避免误判为截断
-        if "".join(lines).replace(" ", "") != text.replace(" ", ""):
+    if cur:
+        if len(lines) < max_lines:
+            lines.append(cur)
+        elif ellipsis:
+            # 已达行数上限但仍有剩余：在最后一行追加省略号
             last = lines[-1]
             while last and d.textlength(last + "…", font=font) > max_w:
                 last = last[:-1]
-            lines[-1] = last + "…"
+            lines[-1] = last.rstrip() + "…"
     return lines
 
 
