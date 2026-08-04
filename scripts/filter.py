@@ -6,7 +6,7 @@
   - 去重（按 ### 标题）。
   - 强制 Top-N 上限（来自 config/site.yaml 的 max_items_per_day）。
   - 时间序提示（若检测到后面的日期比前面更近，打印警告，不强行重排）。
-  - 按日期键聚合进 data/feed.json，aiNews / github / summary 三块互不覆盖。
+  - 按日期键聚合进 data/feed.json，aiNews / github 两块互不覆盖。
 
 这是原 update_feed.py 的升级版（新增校验/去重/上限），旧脚本保留为兼容后备。
 
@@ -25,7 +25,7 @@ import re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FEED_PATH = os.path.join(ROOT, "data", "feed.json")
 RAW = os.path.join(ROOT, "data", "raw")
-SECTIONS = {"aiNews", "github", "summary"}
+SECTIONS = {"aiNews", "github"}
 
 
 def load_site_cfg():
@@ -92,20 +92,6 @@ def _check_github_structure(md, warnings):
         warnings.append(f"项目列 repo-desc 仅 {desc} 处，少于表格数据行 {len(rows)}（可能缺简介）")
 
 
-def _check_summary_structure(md, n, warnings):
-    """每日速览结构校验（仅告警）：四个分区、3 件必知、篇幅上限。"""
-    for head in ("一句话总览", "必须知道的 3 件事", "其余动态", "GitHub 今日 TOP 3"):
-        if head not in md:
-            warnings.append(f"缺少「## {head}」分区")
-    if n != 3:
-        warnings.append(f"「必须知道的 3 件事」检测到 {n} 条 ### 条目，应为 3 条")
-    # 篇幅：速览定位为 30 秒读完，正文（去掉标记）控制在 700 字以内
-    plain = re.sub(r"[#>*`\-\[\]()|]", "", md)
-    plain = re.sub(r"\s+", "", plain)
-    if len(plain) > 700:
-        warnings.append(f"速览正文约 {len(plain)} 字，超出 700 字上限（目标 400–500 字）")
-
-
 def validate(md, max_items, section=None, date=None):
     warnings = []
     if not md.strip():
@@ -135,8 +121,6 @@ def validate(md, max_items, section=None, date=None):
         _check_ai_structure(md, n, warnings)
     elif section == "github":
         _check_github_structure(md, warnings)
-    elif section == "summary":
-        _check_summary_structure(md, n, warnings)
     return True, warnings
 
 

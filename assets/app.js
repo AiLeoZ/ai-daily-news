@@ -169,16 +169,6 @@ function render() {
   const posterLink = document.getElementById("poster-link");
   if (posterLink) posterLink.hidden = !isLatest;
 
-  // 只有「最新」日期且存在 summary 时才显示「今日速览图」入口
-  const summaryLink = document.getElementById("summary-link");
-  if (summaryLink) {
-    const hasSummary = !!(entry.summary && entry.summary.markdown && entry.summary.markdown.trim());
-    summaryLink.hidden = !isLatest || !hasSummary;
-    if (!summaryLink.hidden) {
-      summaryLink.href = `output/summary/${date}.png`;
-    }
-  }
-
   // 高亮当前日期 + 同步下拉选择
   document.querySelectorAll(".date-chip").forEach((chip) => {
     chip.classList.toggle("active", chip.dataset.date === date);
