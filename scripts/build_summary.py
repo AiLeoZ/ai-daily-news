@@ -143,11 +143,6 @@ def render_summary_html(date, md):
       </div>
     </div>
   </section>
-
-  <footer class="site-footer">
-    <p>本页为 {fmt_date(date)} 的 AI 统一提炼精简版，由自动化流程每日生成。</p>
-    {f'<p>联系：<a href="mailto:{CONTACT}">{CONTACT}</a></p>' if CONTACT else ''}
-  </footer>
 </body>
 </html>"""
 
@@ -201,10 +196,6 @@ def render_fallback_html(date):
       </div>
     </div>
   </section>
-
-  <footer class="site-footer">
-    <p>本页为 {fmt_date(date)} 的 AI 提炼精简版，由自动化流程每日生成。</p>
-  </footer>
 </body>
 </html>"""
 
