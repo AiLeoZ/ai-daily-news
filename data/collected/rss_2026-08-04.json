@@ -1,6 +1,6 @@
 {
   "date": "2026-08-04",
-  "count": 306,
+  "count": 305,
   "items": [
     {
       "source": "ArXiv cs.AI",
@@ -2068,11 +2068,25 @@
       "summary": "It feels bad enough when an open letter signed by leading economists warns that AI might steal your job. The fact it may soon be better than you at making dinner? Insult to injury. But that’s exactly what the company 1X promised when it showed off a pair of new, impressively dexterous (and, to some,&#8230;"
     },
     {
-      "source": "MIT Tech Review AI",
-      "title": "Samsung’s chip workers are jumping ship to rival SK Hynix",
-      "link": "https://www.technologyreview.com/2026/07/28/1140853/samsung-chip-workers-exodus-sk-hynix/",
-      "published": "Tue, 28 Jul 2026 09:18:57 +0000",
-      "summary": "Lee, an engineer at Samsung’s semiconductor division, clocks out when his shift ends. He used to work longer hours, going the extra mile to excel at his projects. But lately, he’s been coming straight home to work on his job application for the chipmaker’s South Korean rival SK Hynix, sharing tips with his coworkers on&#8230;"
+      "source": "量子位",
+      "title": "OpenAI天价网红公关活动，捅马蜂窝了",
+      "link": "https://www.qbitai.com/2026/08/466032.html",
+      "published": "Tue, 04 Aug 2026 09:13:57 +0000",
+      "summary": "OpenAI+田园牧歌，画风属实太违和"
+    },
+    {
+      "source": "量子位",
+      "title": "腾讯混元Hy ASR 3.0 preview：让语音识别理解上下文",
+      "link": "https://www.qbitai.com/2026/08/465973.html",
+      "published": "Tue, 04 Aug 2026 08:58:21 +0000",
+      "summary": "元宝已接入"
+    },
+    {
+      "source": "量子位",
+      "title": "DeepSeek低价风暴打服硅谷！海外平台争相倒贴V4 Flash",
+      "link": "https://www.qbitai.com/2026/08/465814.html",
+      "published": "Tue, 04 Aug 2026 08:18:45 +0000",
+      "summary": "那还说啥了梁圣，我订阅费全给你就是了呗"
     },
     {
       "source": "量子位",
@@ -2122,27 +2136,6 @@
       "link": "https://www.qbitai.com/2026/08/465361.html",
       "published": "Mon, 03 Aug 2026 06:49:27 +0000",
       "summary": "由融中财经和秦创原科技创新投资集团主办的2026（第十二届）中国科创投资夏季峰会暨陕西科创产业生态大会圆满落下帷幕。"
-    },
-    {
-      "source": "量子位",
-      "title": "Demo的高估值时代结束了，具身智能开始按生产力重新算账",
-      "link": "https://www.qbitai.com/2026/08/465225.html",
-      "published": "Mon, 03 Aug 2026 05:42:02 +0000",
-      "summary": ""
-    },
-    {
-      "source": "量子位",
-      "title": "刚刚，阿里Qwen3.8-Max来了！冲进全球第一梯队，模型表现直逼Claude",
-      "link": "https://www.qbitai.com/2026/08/465226.html",
-      "published": "Mon, 03 Aug 2026 05:41:02 +0000",
-      "summary": "编程、专业工作、长程任务、多模态分析统统梭哈"
-    },
-    {
-      "source": "量子位",
-      "title": "阿里Qwen3.8正式发布，编程与办公再进化，推理更快更稳定",
-      "link": "https://www.qbitai.com/2026/08/465215.html",
-      "published": "Mon, 03 Aug 2026 04:58:17 +0000",
-      "summary": "阿里巴巴正式发布新一代基座大模型Qwen3.8，整体性能处于全球大模型第一梯队。Qwen3.8-Max预计下周开源，同时还将开源 Qwen3.8-27B。"
     }
   ],
   "errors": [
