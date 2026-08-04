@@ -165,18 +165,24 @@ function render() {
   const isLatest = date === state.dates[0];
   document.getElementById("latest-btn").hidden = isLatest;
 
-  // 只有「最新」日期才显示「今日海报」入口
+  // 海报：该日期有真实生成的海报文件时显示，并指向对应日期（不再统一 latest）
   const posterLink = document.getElementById("poster-link");
-  if (posterLink) posterLink.hidden = !isLatest;
+  if (posterLink) {
+    const poster = entry.poster;
+    posterLink.hidden = !poster;
+    if (poster) posterLink.href = poster;
+  }
 
-  // 若该日期存在 summary 页，则显示「资讯速览」入口
+  // 资讯速览：该日期有真实生成的速览页时显示，并指向对应日期（不再统一 latest）
   const summaryLink = document.getElementById("summary-link");
   if (summaryLink) {
-    const hasSummary = !!(entry.summary && entry.summary.markdown && entry.summary.markdown.trim());
-    summaryLink.hidden = !hasSummary;
-    if (!summaryLink.hidden) {
-      summaryLink.href = `output/summary/${date}.html`;
-    }
+    const sumHtml =
+      entry.summaryHtml ||
+      (entry.summary && entry.summary.markdown && entry.summary.markdown.trim()
+        ? `output/summary/${date}.html`
+        : "");
+    summaryLink.hidden = !sumHtml;
+    if (sumHtml) summaryLink.href = sumHtml;
   }
 
   // 高亮当前日期 + 同步下拉选择

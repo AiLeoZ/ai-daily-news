@@ -6,9 +6,14 @@
   - ## 关键要点  ：条目式列表，每条一句话，覆盖重要新闻事件与 GitHub 趋势特征
 
 说明：本脚本只负责「渲染」。真正的 AI 总结在每日流水线中由大模型对「完整页面内容
-（新闻条目 + GitHub 榜单项目）」一次性生成并写入 feed.json。若某日内容为空或 AI
-生成失败（feed.json 无 summary / markdown 为空），本脚本会渲染一个同款样式的兜底卡片，
-保证链接永不 404。
+（新闻条目 + GitHub 榜单项目）」一次性生成并写入 feed.json。
+
+重要约定：本脚本**仅当某日期在 feed.json 中确有 summary 段时才生成速览页**。
+没有 summary 的历史日期一律跳过、不生成任何文件 —— 否则会在 output/summary/ 下留下
+空兜底页，被 build.py 的资产索引误注册成速览入口，导致用户在历史日期看到空的「今日速览」。
+（若某日 summary 段存在但 Markdown 渲染后为空，才会渲染同款样式的兜底卡片。）
+feed.json 中每个日期是否有速览页，最终以 output/summary/$DATE.html 实际文件为准，
+由 build.py 扫描写回 summaryHtml 字段供前端精确显隐。
 """
 import datetime
 import json
@@ -229,7 +234,12 @@ def main():
         if d not in entries:
             continue
         md = (entries[d].get("summary") or {}).get("markdown", "")
-        # 无论是否有 summary，都生成页面：有内容渲染正常页，无内容渲染兜底页（避免 404）
+        # 仅当该日期确有真实 summary 内容时才生成页面。
+        # 无 summary 的日期（如尚未生成速览的历史日）一律跳过，
+        # 不生成兜底页 —— 否则会在 feed.json 中被误注册成速览入口，
+        # 导致用户点开历史日期时看到空的「今日速览」。
+        if not md or not md.strip():
+            continue
         html = render_summary_html(d, md)
         with open(os.path.join(OUT, f"{d}.html"), "w", encoding="utf-8") as f:
             f.write(html)
@@ -241,7 +251,7 @@ def main():
             f.write(render_redirect_html(latest))
         print(f"已生成 {len(generated)} 个资讯速览页 → output/summary/，最新：{latest}")
     else:
-        print("未检测到任何日期条目，跳过生成")
+        print("未检测到任何含 summary 的日期，跳过生成（feed.json 中无 summary 段的日期不会生成速览页）")
 
 
 if __name__ == "__main__":

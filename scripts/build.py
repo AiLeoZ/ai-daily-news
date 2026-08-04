@@ -70,6 +70,9 @@ def render_day_html(date, entry, asset_rel):
     ai_time = (entry.get("aiNews") or {}).get("generatedAt", "")
     gh_time = (entry.get("github") or {}).get("generatedAt", "")
     has_summary = bool((entry.get("summary") or {}).get("markdown", "").strip())
+    # 资产索引：以 feed.json 中记录的实际产物路径为准（build.py 末尾扫描写回）
+    poster_path = entry.get("poster", "")
+    summary_path = entry.get("summaryHtml", "") or (f"output/summary/{date}.html" if has_summary else "")
 
     def fmt_time(iso):
         if not iso:
@@ -95,7 +98,8 @@ def render_day_html(date, entry, asset_rel):
         <p class="subtitle">{SITE_SUB}</p>
       </div>
       <div class="header-meta">
-        {f'<a class="summary-btn" href="{asset_rel}output/summary/{date}.html" target="_blank" style="text-decoration:none">⚡ 资讯速览</a>' if has_summary else ''}
+        {f'<a class="summary-btn" href="{asset_rel}{summary_path}" target="_blank" style="text-decoration:none">⚡ 资讯速览</a>' if summary_path else ''}
+        {f'<a class="poster-btn" href="{asset_rel}{poster_path}" target="_blank" style="text-decoration:none">🖼 今日海报</a>' if poster_path else ''}
         <span class="viewing-date">{fmt_date(date)}</span>
         <a class="latest-btn" href="{asset_rel}../index.html" style="text-decoration:none">首页</a>
       </div>
@@ -206,19 +210,39 @@ def main():
         print(f"指定日期 {args.date} 不在 feed.json 中")
         return
 
-    # 1) 每日独立归档页
+    # 1) 资产索引（必须放在渲染页面之前）：扫描实际产物，把每个日期真实存在的
+    #    海报/速览路径写回 feed.json，供 SPA 与静态归档页按所选日期精确显隐与跳转。
+    #    注意：build_summary.py 只会为确有 summary 内容的日期生成页面，因此无 summary
+    #    的历史日期不会被注册成速览入口。
+    for d in dates:
+        e = entries[d]
+        poster_file = os.path.join(OUT, "poster", f"{d}.png")
+        summary_file = os.path.join(OUT, "summary", f"{d}.html")
+        if os.path.exists(poster_file):
+            e["poster"] = f"output/poster/{d}.png"
+        else:
+            e.pop("poster", None)
+        if os.path.exists(summary_file):
+            e["summaryHtml"] = f"output/summary/{d}.html"
+        else:
+            e.pop("summaryHtml", None)
+    with open(FEED_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print("已写回 feed.json 资产索引（poster / summaryHtml）")
+
+    # 2) 每日独立归档页（此时 entries 已含正确资产路径）
     for d in dates:
         html = render_day_html(d, entries[d], "../../")
         with open(os.path.join(ARCHIVE, f"{d}.html"), "w", encoding="utf-8") as f:
             f.write(html)
     print(f"已生成 {len(dates)} 个每日归档页 → output/archive/")
 
-    # 2) 历史索引
+    # 3) 历史索引
     with open(os.path.join(OUT, "history.html"), "w", encoding="utf-8") as f:
         f.write(render_history_html(dates))
     print("已生成 output/history.html")
 
-    # 3) 静态首页（当日最新）
+    # 4) 静态首页（当日最新）
     latest = dates[0]
     with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
         f.write(render_day_html(latest, entries[latest], "../"))
