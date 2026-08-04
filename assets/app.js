@@ -24,6 +24,32 @@ function fmtTime(iso) {
   return `更新于 ${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())} ${pad(t.getHours())}:${pad(t.getMinutes())}`;
 }
 
+// ----------------------------------------------------------------
+// 日期校验：按选定日期精准调取资源，若链接指向的文件名日期与当前日期不一致，
+// 视为错配/串用，隐藏该入口并弹出告警，避免展示错误日期的内容。
+function fileEndsWithDate(path, date, ext) {
+  if (!path) return false;
+  return path.endsWith(`${date}${ext}`);
+}
+
+let _warnShown = false;
+function flagDateMismatch(kind, path, date) {
+  const el = document.getElementById("date-warning");
+  if (!el) return;
+  el.hidden = false;
+  el.textContent = `⚠️ 日期校验异常：${kind}资源（${path || "无"}）与当前查看日期 ${date} 不匹配，已隐藏该入口，避免展示错误日期的内容。`;
+  _warnShown = true;
+}
+
+function clearDateWarning() {
+  const el = document.getElementById("date-warning");
+  if (el) {
+    el.hidden = true;
+    el.textContent = "";
+  }
+  _warnShown = false;
+}
+
 function renderMarkdown(md) {
   if (!md || !md.trim()) return '<p class="loading">今日尚未更新</p>';
   const html = marked.parse(md);
@@ -140,6 +166,7 @@ function render() {
   const entry = state.entries[date] || {};
 
   document.getElementById("viewing-date").textContent = fmtDate(date);
+  clearDateWarning();
 
   const ai = entry.aiNews;
   const gh = entry.github;
@@ -169,8 +196,14 @@ function render() {
   const posterLink = document.getElementById("poster-link");
   if (posterLink) {
     const poster = entry.poster;
-    posterLink.hidden = !poster;
-    if (poster) posterLink.href = poster;
+    // 校验：链接文件名日期必须与当前查看日期一致，严防串用
+    if (poster && fileEndsWithDate(poster, date, ".png")) {
+      posterLink.hidden = false;
+      posterLink.href = poster;
+    } else {
+      posterLink.hidden = true;
+      if (poster) flagDateMismatch("海报", poster, date);
+    }
   }
 
   // 资讯速览：该日期有真实生成的速览页时显示，并指向对应日期（不再统一 latest）
@@ -181,8 +214,14 @@ function render() {
       (entry.summary && entry.summary.markdown && entry.summary.markdown.trim()
         ? `output/summary/${date}.html`
         : "");
-    summaryLink.hidden = !sumHtml;
-    if (sumHtml) summaryLink.href = sumHtml;
+    // 校验：速览页文件名日期必须与当前查看日期一致
+    if (sumHtml && fileEndsWithDate(sumHtml, date, ".html")) {
+      summaryLink.hidden = false;
+      summaryLink.href = sumHtml;
+    } else {
+      summaryLink.hidden = true;
+      if (sumHtml) flagDateMismatch("资讯速览", sumHtml, date);
+    }
   }
 
   // 高亮当前日期 + 同步下拉选择

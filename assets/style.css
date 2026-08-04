@@ -350,3 +350,14 @@ body {
   }
   .gh-star-num { font-size: 14px; }
 }
+/* 日期校验告警条 */
+.date-warning {
+  margin: 0;
+  padding: 12px 20px;
+  background: #fff4e5;
+  color: #9a3412;
+  border-bottom: 2px solid #f59e0b;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
