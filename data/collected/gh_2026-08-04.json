@@ -8,7 +8,7 @@
       "url": "https://github.com/lyogavin/airllm",
       "language": "Jupyter Notebook",
       "description": "AirLLM 70B inference with single 4GB GPU",
-      "total_stars": 27169,
+      "total_stars": 27190,
       "gained": 1085,
       "period": "daily"
     },
@@ -18,7 +18,7 @@
       "url": "https://github.com/zhaoxuya520/reverse-skill",
       "language": "PowerShell",
       "description": "Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack AI-powered routing + On-demand toolchain bootstrapping + Self-evolving knowledge base Supports Claude Code, Kiro, Cursor, Cline, and other AI coding clients 逆向/渗透/安全技能路由包 - AI 自动路由 + 按需自举工具链 + 自动进化经验库 | 支持 Claude Code / Kiro / Cursor / Cline 等代码 AI 客户端",
-      "total_stars": 15858,
+      "total_stars": 15903,
       "gained": 2446,
       "period": "daily"
     },
@@ -28,7 +28,7 @@
       "url": "https://github.com/firecrawl/pdf-inspector",
       "language": "Rust",
       "description": "Fast Rust library for PDF inspection, classification, and text extraction. Intelligently detects scanned vs text-based PDFs to enable smart routing decisions.",
-      "total_stars": 8317,
+      "total_stars": 8360,
       "gained": 1699,
       "period": "daily"
     },
@@ -38,7 +38,7 @@
       "url": "https://github.com/esengine/DeepSeek-Reasonix",
       "language": "Go",
       "description": "DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability — leave it running.",
-      "total_stars": 29964,
+      "total_stars": 29978,
       "gained": 883,
       "period": "daily"
     },
@@ -48,7 +48,7 @@
       "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
       "language": "TypeScript",
       "description": "TencentDB Agent Memory is a team-level memory hub for AI Agents — turning conversations, docs, and code into four reusable memory assets (Chat Memory, Skill, LLM-Wiki, Code-Graph) that are governed, shared, and equipped across agents and frameworks.",
-      "total_stars": 12138,
+      "total_stars": 12166,
       "gained": 1090,
       "period": "daily"
     },
@@ -58,7 +58,7 @@
       "url": "https://github.com/microsoft/AI-For-Beginners",
       "language": "Jupyter Notebook",
       "description": "12 Weeks, 24 Lessons, AI for All!",
-      "total_stars": 60784,
+      "total_stars": 60803,
       "gained": 1902,
       "period": "daily"
     },
@@ -68,7 +68,7 @@
       "url": "https://github.com/microsoft/generative-ai-for-beginners",
       "language": "Jupyter Notebook",
       "description": "21 Lessons, Get Started Building with Generative AI",
-      "total_stars": 115580,
+      "total_stars": 115602,
       "gained": 775,
       "period": "daily"
     },
@@ -78,7 +78,7 @@
       "url": "https://github.com/donnemartin/system-design-primer",
       "language": "Python",
       "description": "Learn how to design large-scale systems. Prep for the system design interview. Includes Anki flashcards.",
-      "total_stars": 360548,
+      "total_stars": 360556,
       "gained": 237,
       "period": "daily"
     },
@@ -88,7 +88,7 @@
       "url": "https://github.com/antirez/ds4",
       "language": "C",
       "description": "DeepSeek 4 Flash and PRO local inference engine for Metal, CUDA and ROCm",
-      "total_stars": 20372,
+      "total_stars": 20375,
       "gained": 384,
       "period": "daily"
     },
@@ -98,7 +98,7 @@
       "url": "https://github.com/shiyu-coder/Kronos",
       "language": "Python",
       "description": "Kronos: A Foundation Model for the Language of Financial Markets",
-      "total_stars": 35828,
+      "total_stars": 35832,
       "gained": 200,
       "period": "daily"
     }
@@ -110,7 +110,7 @@
       "url": "https://github.com/block/buzz",
       "language": "Rust",
       "description": "A hive mind communication platform",
-      "total_stars": 21865,
+      "total_stars": 21867,
       "gained": 7372,
       "period": "weekly"
     },
@@ -120,7 +120,7 @@
       "url": "https://github.com/microsoft/AI-For-Beginners",
       "language": "Jupyter Notebook",
       "description": "12 Weeks, 24 Lessons, AI for All!",
-      "total_stars": 60785,
+      "total_stars": 60803,
       "gained": 7554,
       "period": "weekly"
     },
@@ -130,7 +130,7 @@
       "url": "https://github.com/virgiliojr94/book-to-skill",
       "language": "Python",
       "description": "Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use while you work.",
-      "total_stars": 15937,
+      "total_stars": 15943,
       "gained": 5405,
       "period": "weekly"
     },
@@ -140,7 +140,7 @@
       "url": "https://github.com/zhaoxuya520/reverse-skill",
       "language": "PowerShell",
       "description": "Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack AI-powered routing + On-demand toolchain bootstrapping + Self-evolving knowledge base Supports Claude Code, Kiro, Cursor, Cline, and other AI coding clients 逆向/渗透/安全技能路由包 - AI 自动路由 + 按需自举工具链 + 自动进化经验库 | 支持 Claude Code / Kiro / Cursor / Cline 等代码 AI 客户端",
-      "total_stars": 15858,
+      "total_stars": 15903,
       "gained": 6154,
       "period": "weekly"
     },
@@ -150,7 +150,7 @@
       "url": "https://github.com/ayghri/i-have-adhd",
       "language": "Python",
       "description": "A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
-      "total_stars": 16308,
+      "total_stars": 16318,
       "gained": 5012,
       "period": "weekly"
     },
@@ -160,7 +160,7 @@
       "url": "https://github.com/1jehuang/jcode",
       "language": "Rust",
       "description": "The most RAM efficient harness",
-      "total_stars": 15594,
+      "total_stars": 15599,
       "gained": 3735,
       "period": "weekly"
     },
@@ -170,7 +170,7 @@
       "url": "https://github.com/moeru-ai/airi",
       "language": "TypeScript",
       "description": "💖🧸 Self hosted, you-owned Grok Companion, a container of souls of waifu, cyber livings to bring them into our worlds, wishing to achieve Neuro-sama's altitude. Capable of realtime voice chat, Minecraft, Factorio playing. Web / macOS / Windows supported.",
-      "total_stars": 46717,
+      "total_stars": 46716,
       "gained": 2978,
       "period": "weekly"
     },
@@ -180,7 +180,7 @@
       "url": "https://github.com/opengeos/GeoLibre",
       "language": "TypeScript",
       "description": "A lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data. It runs in the web browser, on the desktop, on mobile, and inside Jupyter notebooks.",
-      "total_stars": 5209,
+      "total_stars": 5212,
       "gained": 2630,
       "period": "weekly"
     },
@@ -190,7 +190,7 @@
       "url": "https://github.com/pascalorg/editor",
       "language": "TypeScript",
       "description": "Create and share 3D architectural projects.",
-      "total_stars": 20939,
+      "total_stars": 20940,
       "gained": 2953,
       "period": "weekly"
     },
@@ -200,7 +200,7 @@
       "url": "https://github.com/different-ai/openwork",
       "language": "TypeScript",
       "description": "The open-source alternative to Claude Cowork (powered by opencode)",
-      "total_stars": 20684,
+      "total_stars": 20687,
       "gained": 3429,
       "period": "weekly"
     }

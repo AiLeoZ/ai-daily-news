@@ -1,6 +1,6 @@
 {
   "date": "2026-08-04",
-  "count": 306,
+  "count": 310,
   "items": [
     {
       "source": "ArXiv cs.AI",
@@ -2075,6 +2075,34 @@
       "summary": "Lee, an engineer at Samsung’s semiconductor division, clocks out when his shift ends. He used to work longer hours, going the extra mile to excel at his projects. But lately, he’s been coming straight home to work on his job application for the chipmaker’s South Korean rival SK Hynix, sharing tips with his coworkers on&#8230;"
     },
     {
+      "source": "Google Research Blog",
+      "title": "Science One Framework: A verifiable autonomous research framework via Chain-of-Evidence",
+      "link": "https://research.google/blog/science-one-framework-a-verifiable-autonomous-research-framework-via-chain-of-evidence/",
+      "published": "Thu, 30 Jul 2026 20:36:36 +0000",
+      "summary": "General Science"
+    },
+    {
+      "source": "Hugging Face Blog",
+      "title": "GPU Management: Why Idle GPUs Are the New Grounded Aircraft",
+      "link": "https://huggingface.co/blog/Dharma-AI/gpu-management",
+      "published": "Thu, 30 Jul 2026 15:09:09 GMT",
+      "summary": ""
+    },
+    {
+      "source": "Hugging Face Blog",
+      "title": "The OlmoEarth Platform: Geospatial inference at planetary scale",
+      "link": "https://huggingface.co/blog/allenai/olmoearth-infrastructure",
+      "published": "Tue, 28 Jul 2026 16:27:42 GMT",
+      "summary": ""
+    },
+    {
+      "source": "Hugging Face Blog",
+      "title": "LFM2.5-Encoders for Fast Long-Context Inference on CPU",
+      "link": "https://huggingface.co/blog/LiquidAI/lfm2-5-encoders",
+      "published": "Tue, 28 Jul 2026 15:01:45 GMT",
+      "summary": ""
+    },
+    {
       "source": "量子位",
       "title": "亿级日活App的“算力生死劫”：推理成本倒挂，他们靠跨云架构砍掉75% GPU集群",
       "link": "https://www.qbitai.com/2026/08/465732.html",
@@ -2146,14 +2174,6 @@
     }
   ],
   "errors": [
-    {
-      "source": "Google Research Blog",
-      "error": "URLError: <urlopen error timed out>"
-    },
-    {
-      "source": "Hugging Face Blog",
-      "error": "URLError: <urlopen error timed out>"
-    },
     {
       "source": "机器之心",
       "error": "ParseError: mismatched tag: line 11, column 242"
