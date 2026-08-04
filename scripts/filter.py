@@ -6,7 +6,7 @@
   - 去重（按 ### 标题）。
   - 强制 Top-N 上限（来自 config/site.yaml 的 max_items_per_day）。
   - 时间序提示（若检测到后面的日期比前面更近，打印警告，不强行重排）。
-  - 按日期键聚合进 data/feed.json，aiNews / github 两块互不覆盖。
+  - 按日期键聚合进 data/feed.json，aiNews / github / summary 三块互不覆盖。
 
 这是原 update_feed.py 的升级版（新增校验/去重/上限），旧脚本保留为兼容后备。
 
@@ -25,7 +25,7 @@ import re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FEED_PATH = os.path.join(ROOT, "data", "feed.json")
 RAW = os.path.join(ROOT, "data", "raw")
-SECTIONS = {"aiNews", "github"}
+SECTIONS = {"aiNews", "github", "summary"}
 
 
 def load_site_cfg():
@@ -92,6 +92,23 @@ def _check_github_structure(md, warnings):
         warnings.append(f"项目列 repo-desc 仅 {desc} 处，少于表格数据行 {len(rows)}（可能缺简介）")
 
 
+def _check_summary_structure(md, n, warnings):
+    """每日资讯速览结构校验（仅告警）：三大分区、条目覆盖、GitHub 归纳。"""
+    if "今日新闻总结" not in md:
+        warnings.append("缺少「## 今日新闻总结」分区")
+    if "GitHub 今日榜总结" not in md:
+        warnings.append("缺少「## GitHub 今日榜总结」分区")
+    if "GitHub 本周榜总结" not in md:
+        warnings.append("缺少「## GitHub 本周榜总结」分区")
+    if n == 0:
+        warnings.append("今日新闻总结未检测到 ### 条目")
+    if not re.search(r"^>\s+", md, re.M):
+        warnings.append("GitHub 总结缺少 blockquote（>）整体归纳")
+    gh_items = len(re.findall(r"^\s*\d+\.\s+\S+", md, re.M))
+    if gh_items < 6:
+        warnings.append(f"GitHub 日榜/周榜点评项目共 {gh_items} 条，可能不足 6 条（日榜 3 + 周榜 3）")
+
+
 def validate(md, max_items, section=None, date=None):
     warnings = []
     if not md.strip():
@@ -121,6 +138,8 @@ def validate(md, max_items, section=None, date=None):
         _check_ai_structure(md, n, warnings)
     elif section == "github":
         _check_github_structure(md, warnings)
+    elif section == "summary":
+        _check_summary_structure(md, n, warnings)
     return True, warnings
 
 

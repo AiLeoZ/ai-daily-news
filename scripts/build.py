@@ -69,6 +69,7 @@ def render_day_html(date, entry, asset_rel):
     gh = (entry.get("github") or {}).get("markdown", "")
     ai_time = (entry.get("aiNews") or {}).get("generatedAt", "")
     gh_time = (entry.get("github") or {}).get("generatedAt", "")
+    has_summary = bool((entry.get("summary") or {}).get("markdown", "").strip())
 
     def fmt_time(iso):
         if not iso:
@@ -94,6 +95,7 @@ def render_day_html(date, entry, asset_rel):
         <p class="subtitle">{SITE_SUB}</p>
       </div>
       <div class="header-meta">
+        {f'<a class="summary-btn" href="{asset_rel}output/summary/{date}.html" target="_blank" style="text-decoration:none">⚡ 资讯速览</a>' if has_summary else ''}
         <span class="viewing-date">{fmt_date(date)}</span>
         <a class="latest-btn" href="{asset_rel}../index.html" style="text-decoration:none">首页</a>
       </div>

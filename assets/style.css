@@ -65,6 +65,13 @@ body {
   text-decoration: none; transition: .15s;
 }
 .poster-btn:hover { background: var(--accent-soft); text-decoration: none; }
+.summary-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 1px solid var(--line); background: #fff; color: var(--accent);
+  padding: 5px 13px; border-radius: 999px; cursor: pointer; font-size: 13px;
+  text-decoration: none; transition: .15s;
+}
+.summary-btn:hover { background: var(--accent-soft); text-decoration: none; }
 
 /* Layout (单栏上下顺序) */
 .layout {
@@ -280,7 +287,7 @@ body {
   .brand h1 { font-size: 18px; }
   .subtitle { font-size: 12px; }
   .header-meta { width: 100%; justify-content: flex-start; gap: 8px; flex-wrap: wrap; }
-  .viewing-date, .latest-btn, .poster-btn { font-size: 12px; padding: 4px 10px; }
+  .viewing-date, .latest-btn, .poster-btn, .summary-btn { font-size: 12px; padding: 4px 10px; }
   .site-header { position: relative; }
 
   .layout { padding: 14px 14px 0; margin-top: 14px; }
