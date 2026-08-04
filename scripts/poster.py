@@ -116,12 +116,22 @@ def parse_ai_news(md, limit=5):
             continue
         title = clean(lines[0])
         title = re.sub(r"^\d+[.、]\s*", "", title)
+        # 统一提取日期并内联到标题末尾，格式：（M月D日）或（YYYY-MM-DD）
         date_tag = ""
-        m = re.search(r"[（(]([^（()）]*月[^（()）]*日)[)）]\s*$", title)
+        m = re.search(r"[（(]([^（()）]*?(?:\d{4}-\d{2}-\d{2}|\d{1,2}月\d{1,2}日))[)）]\s*$", title)
         if m:
-            date_tag = m.group(1).replace(" ", "")
+            raw = m.group(1).replace(" ", "")
+            # 统一转为「M月D日」短格式用于海报展示
+            dm = re.match(r"(\d{4})-(\d{2})-(\d{2})", raw)
+            if dm:
+                date_tag = "%s月%s日" % (int(dm.group(2)), int(dm.group(3)))
+            else:
+                date_tag = raw
             title = title[: m.start()].strip()
-        items.append({"title": title, "date": date_tag})
+        # 将日期拼回标题末尾，确保换行时日期跟随文字流动、不重叠
+        if date_tag:
+            title = title + "（" + date_tag + "）"
+        items.append({"title": title})
         if len(items) >= limit:
             break
     return items
@@ -308,11 +318,6 @@ def render(date, ai_items, gh_items, out_path):
         for line in t_lines:
             d.text((tx, ty), line, font=f(31, True), fill=INK)
             ty += 41
-        if it["date"]:
-            dw = d.textlength(it["date"], font=f(20))
-            d.rounded_rectangle([W - PAD - dw - 34, y + 26, W - PAD - 16, y + 60],
-                                radius=11, fill=(30, 58, 138))
-            d.text((W - PAD - dw - 25, y + 32), it["date"], font=f(20), fill=(191, 219, 254))
         y += ch + CARD_GAP
 
     y += 30
