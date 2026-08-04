@@ -93,20 +93,25 @@ def _check_github_structure(md, warnings):
 
 
 def _check_summary_structure(md, n, warnings):
-    """每日资讯速览结构校验（仅告警）：三大分区、条目覆盖、GitHub 归纳。"""
-    if "今日新闻总结" not in md:
-        warnings.append("缺少「## 今日新闻总结」分区")
-    if "GitHub 今日榜总结" not in md:
-        warnings.append("缺少「## GitHub 今日榜总结」分区")
-    if "GitHub 本周榜总结" not in md:
-        warnings.append("缺少「## GitHub 本周榜总结」分区")
-    if n == 0:
-        warnings.append("今日新闻总结未检测到 ### 条目")
-    if not re.search(r"^>\s+", md, re.M):
-        warnings.append("GitHub 总结缺少 blockquote（>）整体归纳")
-    gh_items = len(re.findall(r"^\s*\d+\.\s+\S+", md, re.M))
-    if gh_items < 6:
-        warnings.append(f"GitHub 日榜/周榜点评项目共 {gh_items} 条，可能不足 6 条（日榜 3 + 周榜 3）")
+    """每日资讯速览结构校验（仅告警）：统一总结的两段式结构。
+
+    统一总结只要求两个 ## 分区：
+      - 摘要      ：一段连贯的概括性段落
+      - 关键要点  ：条目式列表，每条一句话
+    """
+    if "## 摘要" not in md:
+        warnings.append("缺少「## 摘要」分区")
+    if "## 关键要点" not in md:
+        warnings.append("缺少「## 关键要点」分区")
+    # 关键要点应至少含若干列表项（- 开头）
+    bullets = re.findall(r"^\s*[-*]\s+\S", md, re.M)
+    if len(bullets) < 3:
+        warnings.append(f"「关键要点」仅 {len(bullets)} 条列表项，建议至少 3 条")
+    # 整体篇幅应覆盖要点，过短可能是 AI 未真正总结
+    plain = re.sub(r"[#>*`\-\[\]()|]", "", md)
+    plain = re.sub(r"\s+", "", plain)
+    if len(plain) < 80:
+        warnings.append(f"速览正文约 {len(plain)} 字，过短，可能未真正总结全页")
 
 
 def validate(md, max_items, section=None, date=None):
@@ -116,7 +121,7 @@ def validate(md, max_items, section=None, date=None):
     if "## " not in md:
         warnings.append("缺少 ## 分类标题")
     n = count_items(md, section)
-    if section != "github" and n == 0:
+    if section not in ("github", "summary") and n == 0:
         warnings.append("未检测到 ### 条目（可能格式不符）")
     # Top-N 上限仅约束 AI 新闻条目；GitHub 表格（多行）不应被裁切
     if section == "aiNews" and n > max_items:

@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
-"""构建每日资讯速览页：从 data/feed.json 的 summary 段生成 output/summary/$DATE.html。"""
+"""构建每日资讯速览页：从 data/feed.json 的 summary 段生成 output/summary/$DATE.html。
+
+速览页采用「统一总结」结构：
+  - ## 摘要      ：一段连贯的概括性段落，点明当日 AI 行业整体趋势并涵盖 GitHub 榜单反映的开发者关注方向
+  - ## 关键要点  ：条目式列表，每条一句话，覆盖重要新闻事件与 GitHub 趋势特征
+
+说明：本脚本只负责「渲染」。真正的 AI 总结在每日流水线中由大模型对「完整页面内容
+（新闻条目 + GitHub 榜单项目）」一次性生成并写入 feed.json。若某日内容为空或 AI
+生成失败（feed.json 无 summary / markdown 为空），本脚本会渲染一个同款样式的兜底卡片，
+保证链接永不 404。
+"""
 import datetime
 import json
 import os
@@ -22,7 +32,7 @@ CONTACT = _CFG.get("contact_email", "")
 
 def md_to_html(md):
     if not md or not md.strip():
-        return '<p class="loading">今日尚未生成速览</p>'
+        return ""
     try:
         import markdown
         return markdown.markdown(md, extensions=["tables", "fenced_code", "sane_lists"])
@@ -55,17 +65,24 @@ def split_summary_sections(md):
 
 
 def dot_for(title):
-    if "新闻" in title:
+    if title == "摘要":
         return "dot-ai"
     return "dot-gh"
 
 
-def render_summary_html(date, md):
+def render_body(md):
+    """把 summary Markdown 渲染为若干 section 块；无内容返回空串。"""
+    if not md or not md.strip():
+        return ""
     sections = split_summary_sections(md)
-    section_html = ""
+    body = ""
     for title, content in sections:
+        if not content.strip():
+            continue
         html = md_to_html(content)
-        section_html += f"""
+        if not html.strip():
+            continue
+        body += f"""
     <section class="section">
       <div class="section-head">
         <span class="dot {dot_for(title)}"></span>
@@ -74,6 +91,13 @@ def render_summary_html(date, md):
       <article class="content card">{html}</article>
     </section>
 """
+    return body
+
+
+def render_summary_html(date, md):
+    body = render_body(md)
+    if not body.strip():
+        return render_fallback_html(date)
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -99,13 +123,70 @@ def render_summary_html(date, md):
   </header>
 
   <main class="layout">
-{section_html}
+{body}
   </main>
 
   <section class="history">
     <div class="history-inner">
       <div class="history-head">
-        <h3>觉得太精简？</h3>
+        <h3>想看更多细节？</h3>
+      </div>
+      <div class="history-bar">
+        <a class="date-chip" style="text-decoration:none" href="../archive/{date}.html">查看 {fmt_date(date)} 完整版</a>
+        <a class="date-chip" style="text-decoration:none" href="../../index.html">回到首页</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>本页为 {fmt_date(date)} 的 AI 统一提炼精简版，由自动化流程每日生成。</p>
+    {f'<p>联系：<a href="mailto:{CONTACT}">{CONTACT}</a></p>' if CONTACT else ''}
+  </footer>
+</body>
+</html>"""
+
+
+def render_fallback_html(date):
+    """内容为空 / AI 生成失败时的兜底页，样式与正常页一致。"""
+    return f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{SITE_TITLE} · 资讯速览 · {fmt_date(date)}</title>
+  <link rel="stylesheet" href="../../assets/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <h1>{SITE_TITLE}</h1>
+        <p class="subtitle">资讯速览 · {fmt_date(date)}</p>
+      </div>
+      <div class="header-meta">
+        <a class="summary-btn" href="../poster/{date}.png" target="_blank" style="text-decoration:none">🖼 今日海报</a>
+        <a class="latest-btn" href="../archive/{date}.html" style="text-decoration:none">查看完整版</a>
+        <a class="latest-btn" href="../../index.html" style="text-decoration:none">首页</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="section">
+      <div class="section-head">
+        <span class="dot dot-ai"></span>
+        <h2>今日速览</h2>
+      </div>
+      <article class="content card">
+        <p class="loading">本日速览内容暂未生成（页面内容为空或 AI 总结未成功），请查看完整版了解当日全部 AI 新闻与 GitHub 榜单。</p>
+      </article>
+    </section>
+  </main>
+
+  <section class="history">
+    <div class="history-inner">
+      <div class="history-head">
+        <h3>查看完整内容</h3>
       </div>
       <div class="history-bar">
         <a class="date-chip" style="text-decoration:none" href="../archive/{date}.html">查看 {fmt_date(date)} 完整版</a>
@@ -116,7 +197,6 @@ def render_summary_html(date, md):
 
   <footer class="site-footer">
     <p>本页为 {fmt_date(date)} 的 AI 提炼精简版，由自动化流程每日生成。</p>
-    {f'<p>联系：<a href="mailto:{CONTACT}">{CONTACT}</a></p>' if CONTACT else ''}
   </footer>
 </body>
 </html>"""
@@ -146,9 +226,10 @@ def main():
     dates = sorted(entries.keys(), reverse=True)
     generated = []
     for d in dates:
-        md = (entries[d].get("summary") or {}).get("markdown", "")
-        if not md.strip():
+        if d not in entries:
             continue
+        md = (entries[d].get("summary") or {}).get("markdown", "")
+        # 无论是否有 summary，都生成页面：有内容渲染正常页，无内容渲染兜底页（避免 404）
         html = render_summary_html(d, md)
         with open(os.path.join(OUT, f"{d}.html"), "w", encoding="utf-8") as f:
             f.write(html)
@@ -160,7 +241,7 @@ def main():
             f.write(render_redirect_html(latest))
         print(f"已生成 {len(generated)} 个资讯速览页 → output/summary/，最新：{latest}")
     else:
-        print("未检测到 summary 内容，跳过生成")
+        print("未检测到任何日期条目，跳过生成")
 
 
 if __name__ == "__main__":
