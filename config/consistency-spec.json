@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "date": {
+    "iso_regex": "\\d{4}-\\d{2}-\\d{2}",
+    "cn_regex": "\\d+月\\d+日",
+    "title_date_regex": "\\（(\\d{4}-\\d{2}-\\d{2}|\\d+月\\d+日)\\）"
+  },
+  "sections": {
+    "aiNews": {
+      "file_glob": "data/raw/*_ai.md",
+      "required_h2": ["🔝 今日要闻", "近期其他要闻"],
+      "item_heading": "###",
+      "item_min": 8,
+      "item_max": 10,
+      "required_body_markers": ["为什么关注", "注解"],
+      "forbidden_phrases": ["通俗解释"],
+      "ordering": "time_desc"
+    },
+    "github": {
+      "file_glob": "data/raw/*_github.md",
+      "required_h2": ["一、今日榜", "二、本周榜"],
+      "forbidden_in_h2": ["since="],
+      "daily_marker": "今日新增 Star",
+      "weekly_marker": "本周新增",
+      "daily_columns": ["排名", "项目", "今日新增 Star", "注解"],
+      "weekly_columns": ["排名", "项目", "总 Star", "本周新增", "注解"],
+      "rows_min": 10,
+      "rows_max": 10,
+      "project_cell_must_contain": "repo-desc"
+    },
+    "summary": {
+      "file_glob": "data/raw/*_summary.md",
+      "required_h2": ["摘要", "关键要点"],
+      "forbidden_phrases": ["通俗解释"]
+    }
+  }
+}

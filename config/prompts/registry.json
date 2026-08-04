@@ -1,0 +1,30 @@
+{
+  "active": "v1",
+  "versions": {
+    "v1": {
+      "prompt_file": "task-orchestration.v1.md",
+      "created": "2026-08-04",
+      "objective": "为指定日期生成结构固定的 AI 资讯内容（aiNews/github/summary），与底层模型无关",
+      "inputs": [
+        "docs/generation-guide.md",
+        "data/collected/rss_$DATE.json",
+        "data/collected/gh_$DATE.json",
+        "联网搜索"
+      ],
+      "outputs": [
+        "data/raw/$DATE_ai.md",
+        "data/raw/$DATE_github.md",
+        "data/raw/$DATE_summary.md"
+      ],
+      "constraints_ref": "docs/generation-guide.md",
+      "self_check_ref": "docs/automation-task-spec.md §4",
+      "model_requirements": [
+        "通用指令跟随",
+        "通用文本生成",
+        "无专属能力依赖"
+      ],
+      "changelog": "初始版本：中性表述、确定性骨架、门控自检、占位符化上下文"
+    }
+  },
+  "migration_notes": "切换底层模型时：仅改调用方传入的 model.id；模板版本仅在长期偏离时才升 v2。换模型后必须跑 scripts/regression_check.py 的 compare 与 scripts/validate_dates.py 确认一致性与日期不串用。"
+}
