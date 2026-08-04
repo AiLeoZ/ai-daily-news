@@ -206,7 +206,7 @@ function render() {
     }
   }
 
-  // 资讯速览：该日期有真实生成的速览页时显示，并指向对应日期（不再统一 latest）
+  // 速览模式：该日期有真实生成的速览页时显示，并指向对应日期（不再统一 latest）
   const summaryLink = document.getElementById("summary-link");
   if (summaryLink) {
     const sumHtml =
@@ -220,7 +220,7 @@ function render() {
       summaryLink.href = sumHtml;
     } else {
       summaryLink.hidden = true;
-      if (sumHtml) flagDateMismatch("资讯速览", sumHtml, date);
+      if (sumHtml) flagDateMismatch("速览模式", sumHtml, date);
     }
   }
 

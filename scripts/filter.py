@@ -93,7 +93,7 @@ def _check_github_structure(md, warnings):
 
 
 def _check_summary_structure(md, n, warnings):
-    """每日资讯速览结构校验（仅告警）：统一总结的两段式结构。
+    """每日速览模式结构校验（仅告警）：统一总结的两段式结构。
 
     统一总结只要求两个 ## 分区：
       - 摘要      ：一段连贯的概括性段落

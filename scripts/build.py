@@ -98,7 +98,7 @@ def render_day_html(date, entry, asset_rel):
         <p class="subtitle">{SITE_SUB}</p>
       </div>
       <div class="header-meta">
-        {f'<a class="summary-btn" href="{asset_rel}{summary_path}" target="_blank" style="text-decoration:none">⚡ 资讯速览</a>' if summary_path else ''}
+        {f'<a class="summary-btn" href="{asset_rel}{summary_path}" target="_blank" style="text-decoration:none">⚡ 速览模式</a>' if summary_path else ''}
         {f'<a class="poster-btn" href="{asset_rel}{poster_path}" target="_blank" style="text-decoration:none">🖼 今日海报</a>' if poster_path else ''}
         <span class="viewing-date">{fmt_date(date)}</span>
         <a class="latest-btn" href="{asset_rel}../index.html" style="text-decoration:none">首页</a>

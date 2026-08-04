@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""构建每日资讯速览页：从 data/feed.json 的 summary 段生成 output/summary/$DATE.html。
+"""构建每日速览模式页：从 data/feed.json 的 summary 段生成 output/summary/$DATE.html。
 
 速览页采用「统一总结」结构：
   - ## 摘要      ：一段连贯的概括性段落，点明当日 AI 行业整体趋势并涵盖 GitHub 榜单反映的开发者关注方向
@@ -110,7 +110,7 @@ def render_summary_html(date, md):
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="doc-date" content="{date}" />
-  <title>{SITE_TITLE} · 资讯速览 · {fmt_date(date)}</title>
+  <title>{SITE_TITLE} · 速览模式 · {fmt_date(date)}</title>
   <link rel="stylesheet" href="../../assets/style.css" />
 </head>
 <body data-date="{date}">
@@ -118,7 +118,7 @@ def render_summary_html(date, md):
     <div class="header-inner">
       <div class="brand">
         <h1>{SITE_TITLE}</h1>
-        <p class="subtitle">资讯速览 · {fmt_date(date)}</p>
+        <p class="subtitle">速览模式 · {fmt_date(date)}</p>
       </div>
       <div class="header-meta">
         <a class="summary-btn" href="../poster/{date}.png" target="_blank" style="text-decoration:none">🖼 今日海报</a>
@@ -160,7 +160,7 @@ def render_fallback_html(date):
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="doc-date" content="{date}" />
-  <title>{SITE_TITLE} · 资讯速览 · {fmt_date(date)}</title>
+  <title>{SITE_TITLE} · 速览模式 · {fmt_date(date)}</title>
   <link rel="stylesheet" href="../../assets/style.css" />
 </head>
 <body data-date="{date}">
@@ -168,7 +168,7 @@ def render_fallback_html(date):
     <div class="header-inner">
       <div class="brand">
         <h1>{SITE_TITLE}</h1>
-        <p class="subtitle">资讯速览 · {fmt_date(date)}</p>
+        <p class="subtitle">速览模式 · {fmt_date(date)}</p>
       </div>
       <div class="header-meta">
         <a class="summary-btn" href="../poster/{date}.png" target="_blank" style="text-decoration:none">🖼 今日海报</a>
@@ -215,10 +215,10 @@ def render_redirect_html(date):
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="refresh" content="0; url={date}.html" />
-  <title>{SITE_TITLE} · 资讯速览 · 最新</title>
+  <title>{SITE_TITLE} · 速览模式 · 最新</title>
 </head>
 <body>
-  <p>正在跳转到最新资讯速览… <a href="{date}.html">点击这里</a></p>
+  <p>正在跳转到最新速览模式… <a href="{date}.html">点击这里</a></p>
 </body>
 </html>"""
 
@@ -251,7 +251,7 @@ def main():
         latest = generated[0]
         with open(os.path.join(OUT, "latest.html"), "w", encoding="utf-8") as f:
             f.write(render_redirect_html(latest))
-        print(f"已生成 {len(generated)} 个资讯速览页 → output/summary/，最新：{latest}")
+        print(f"已生成 {len(generated)} 个速览模式页 → output/summary/，最新：{latest}")
     else:
         print("未检测到任何含 summary 的日期，跳过生成（feed.json 中无 summary 段的日期不会生成速览页）")
 
