@@ -46,7 +46,7 @@ def md_to_html(md):
         return (
             '<div class="md-raw" style="display:none">' + esc + "</div>"
             '<div class="md-out"></div>'
-            '<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>'
+            '<script src="../../assets/marked.min.js"></script>'
             "<script>document.querySelector('.md-out').innerHTML="
             "marked.parse(document.querySelector('.md-raw').textContent);</script>"
         )

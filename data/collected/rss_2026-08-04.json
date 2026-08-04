@@ -2138,18 +2138,9 @@
       "summary": "由融中财经和秦创原科技创新投资集团主办的2026（第十二届）中国科创投资夏季峰会暨陕西科创产业生态大会圆满落下帷幕。"
     }
   ],
-  "errors": [
-    {
-      "source": "Google Research Blog",
-      "error": "URLError: <urlopen error timed out>"
-    },
-    {
-      "source": "Hugging Face Blog",
-      "error": "URLError: <urlopen error timed out>"
-    },
-    {
-      "source": "机器之心",
-      "error": "ParseError: mismatched tag: line 11, column 242"
-    }
+  "errors": [],
+  "offline": true,
+  "sources_used": [
+    "rss_2026-08-04.json"
   ]
 }

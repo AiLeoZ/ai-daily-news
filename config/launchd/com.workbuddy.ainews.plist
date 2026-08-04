@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  macOS 系统级兜底调度：独立于 WorkBuddy 应用是否常驻。
+  作用：每日 06:05 调用 run_daily.sh，补齐"构建/海报/部署"环节。
+  前置：run_daily.sh 会在当日 raw 文件缺失时安全跳过（LLM 文本生成只能由自动化完成）。
+  安装（终端执行一次）：
+    cp config/launchd/com.workbuddy.ainews.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.workbuddy.ainews.plist
+  卸载：
+    launchctl unload ~/Library/LaunchAgents/com.workbuddy.ainews.plist
+    rm ~/Library/LaunchAgents/com.workbuddy.ainews.plist
+  注意：真正的"每日内容生成"主调度仍是 WorkBuddy 自动化（每日 06:00）。本 plist 用于
+        在主调度因应用未开启/中途中断时，确保本地构建与发布尽量不被遗漏。
+-->
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.workbuddy.ainews</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/bash</string>
+      <string>/Users/zhulei/WorkBuddy/2026-08-03-11-34-41/scripts/run_daily.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Hour</key>
+      <integer>6</integer>
+      <key>Minute</key>
+      <integer>5</integer>
+    </dict>
+    <key>WorkingDirectory</key>
+    <string>/Users/zhulei/WorkBuddy/2026-08-03-11-34-41</string>
+    <key>StandardOutPath</key>
+    <string>/Users/zhulei/WorkBuddy/2026-08-03-11-34-41/data/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/zhulei/WorkBuddy/2026-08-03-11-34-41/data/logs/launchd.err.log</string>
+    <key>RunAtLoad</key>
+    <false/>
+  </dict>
+</plist>

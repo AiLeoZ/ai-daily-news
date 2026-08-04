@@ -1,0 +1,42 @@
+# 运行时配置：集中管理所有外部依赖端点与模式开关。
+# 切换「联网 / 离线」只需改 mode；无需改动任何脚本源码。
+# 说明：本文件被 collect.py / poster.py / run_daily.sh 读取。
+mode: offline            # offline | online
+
+collect:
+  rss:
+    enabled: true
+    sources: sources/rss.yaml
+    cache_dir: data/collected
+    # 离线回退：当日无网络时，复用最近一次缓存的 rss_*.json + 本地语料
+    offline_fallback: true
+    corpus_dir: sources/corpus
+  github:
+    enabled: true
+    sources: sources/apis.yaml
+    cache_dir: data/collected
+    offline_fallback: true
+
+generate:
+  # 内容边界：生成阶段是否允许联网搜索补充事实。
+  # offline 模式下必须为 false：仅用本地缓存 + 语料，禁止凭空编造新事实。
+  allow_web_search: false
+  corpus_dir: sources/corpus
+
+git:
+  enabled: true
+  # 离线 / 内网场景下可改为内网 Git 服务器，或设为 false 仅本地保留（不阻塞主流程）。
+  remote: origin
+  branch: main
+  best_effort: true      # 推送失败不阻塞主流程
+
+deploy:
+  enabled: true
+  provider: cloudstudio
+  entry: index.html
+  best_effort: true      # 部署失败不阻塞主流程
+
+poster:
+  # 海报二维码指向地址：离线环境改为内网地址或本地路径，避免硬编码外网。
+  # 留空则回退到 config/site.yaml 的 site_url。
+  qr_url: ""

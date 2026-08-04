@@ -43,12 +43,13 @@ def md_to_html(md):
         import markdown
         return markdown.markdown(md, extensions=["tables", "fenced_code", "sane_lists"])
     except Exception:
-        # 回退：内嵌原始 Markdown，运行时用 marked 渲染
+        # 回退：内嵌原始 Markdown，运行时用本地 vendored marked 渲染（无外网依赖）。
+        # 注：托管 venv 已含 markdown 模块，构建期即预渲染为 HTML，本分支在生产环境不会触发。
         esc = md.replace("`", "\\`").replace("${", "\\${")
         return (
             '<div class="md-raw" style="display:none">' + esc + "</div>"
             '<div class="md-out"></div>'
-            '<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>'
+            '<script src="assets/marked.min.js"></script>'
             "<script>document.querySelector('.md-out').innerHTML="
             "marked.parse(document.querySelector('.md-raw').textContent);</script>"
         )

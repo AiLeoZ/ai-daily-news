@@ -30,14 +30,20 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FEED = os.path.join(ROOT, "data", "feed.json")
 OUT_DIR = os.path.join(ROOT, "output", "poster")
 
-# 公开站点地址：优先取自 config/site.yaml 的 site_url，缺失时回退默认值。
+# 公开站点地址（海报二维码指向）：按优先级读取，避免硬编码外网。
+#   1) config/runtime.yaml 的 poster.qr_url（离线场景可设为内网/本地地址）
+#   2) config/site.yaml 的 site_url
+#   3) 历史默认值（仅兜底）
 try:
     from yamlutil import load_file
     _SITE_CFG = load_file(os.path.join(ROOT, "config", "site.yaml")) or {}
+    _RT_CFG = load_file(os.path.join(ROOT, "config", "runtime.yaml")) or {}
 except Exception:
-    _SITE_CFG = {}
-SITE_URL = (_SITE_CFG.get("site_url")
-            or "https://3a2c7e71a31748508dbe8b75e7cdeca9.bj7.agentos-app.net")
+    _SITE_CFG, _RT_CFG = {}, {}
+_SITE_URL = (_RT_CFG.get("poster", {}) or {}).get("qr_url") \
+    or _SITE_CFG.get("site_url") \
+    or "https://3a2c7e71a31748508dbe8b75e7cdeca9.bj7.agentos-app.net"
+SITE_URL = _SITE_URL
 
 # ---------------------------------------------------------------- 视觉规范
 W = 1080                          # 画布宽（竖版社媒尺寸）

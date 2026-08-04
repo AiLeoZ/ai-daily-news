@@ -183,6 +183,134 @@ def load_gh_period(fallback_path, period):
         return []
 
 
+def find_fallback_rss(date_str):
+    """date_str 之前最近的 rss_*.json（不含当天）；没有则返回 None。"""
+    try:
+        d = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+    except Exception:
+        return None
+    cands = []
+    for fn in os.listdir(OUT):
+        m = re.match(r"^rss_(\d{4}-\d{2}-\d{2})\.json$", fn)
+        if not m or m.group(1) == date_str:
+            continue
+        try:
+            fd = datetime.datetime.strptime(m.group(1), "%Y-%m-%d").date()
+        except Exception:
+            continue
+        if fd <= d:
+            cands.append((fd, os.path.join(OUT, fn)))
+    if not cands:
+        return None
+    cands.sort(key=lambda x: x[0], reverse=True)
+    return cands[0][1]
+
+
+def load_corpus_items():
+    """读取 sources/corpus/*.md，转为与 RSS items 同构的本地素材。"""
+    items = []
+    corp_dir = os.path.join(SRC, "corpus")
+    if not os.path.isdir(corp_dir):
+        return items
+    for fn in sorted(os.listdir(corp_dir)):
+        if not fn.endswith(".md") or fn == "README.md":
+            continue
+        path = os.path.join(corp_dir, fn)
+        try:
+            text = open(path, encoding="utf-8").read()
+        except Exception:
+            continue
+        title = fn[:-3]
+        for line in text.splitlines():
+            if line.startswith("#"):
+                title = line.lstrip("#").strip()
+                break
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", fn + " " + text[:200])
+        pub = m.group(1) if m else datetime.date.today().isoformat()
+        summary = re.sub(r"#.*", "", text)
+        summary = re.sub(r"\s+", " ", summary).strip()[:400]
+        items.append({
+            "source": "本地语料",
+            "title": re.sub(r"\s+", " ", title),
+            "link": "",
+            "published": pub,
+            "summary": summary,
+        })
+    return items
+
+
+def collect_rss_offline(date_str):
+    """离线 RSS：当日缓存 → 最近缓存 → 本地语料，全程不访问网络。"""
+    items, used = [], []
+    today_path = os.path.join(OUT, f"rss_{date_str}.json")
+    if os.path.exists(today_path):
+        try:
+            d = json.load(open(today_path, encoding="utf-8"))
+            items = d.get("items", [])
+            used.append(f"rss_{date_str}.json")
+        except Exception:
+            pass
+    if not items:
+        rec = find_fallback_rss(date_str)
+        if rec:
+            try:
+                d = json.load(open(rec, encoding="utf-8"))
+                items = d.get("items", [])
+                used.append(os.path.basename(rec))
+            except Exception:
+                pass
+    corpus = load_corpus_items()
+    if corpus:
+        used.append("sources/corpus")
+    seen, uniq = set(), []
+    for it in items + corpus:
+        key = it.get("link") or it.get("title")
+        if key in seen:
+            continue
+        seen.add(key)
+        uniq.append(it)
+    return {"date": date_str, "count": len(uniq), "items": uniq,
+            "errors": [], "offline": True, "sources_used": used}
+
+
+def collect_github_offline(date_str):
+    """离线 GitHub：当日缓存 → 最近兜底缓存，全程不访问网络。"""
+    out = {"date": date_str, "enabled": True, "daily": [], "weekly": [],
+           "errors": [], "offline": True}
+    used = []
+    today_path = os.path.join(OUT, f"gh_{date_str}.json")
+    if os.path.exists(today_path):
+        try:
+            d = json.load(open(today_path, encoding="utf-8"))
+            out["daily"] = d.get("daily", [])
+            out["weekly"] = d.get("weekly", [])
+            used.append(f"gh_{date_str}.json")
+        except Exception:
+            pass
+    if not out["daily"]:
+        fb = find_fallback_gh(date_str)
+        if fb:
+            out["daily"] = load_gh_period(fb, "daily")
+            used.append(os.path.basename(fb))
+    if not out["weekly"]:
+        fb = find_fallback_gh(date_str)
+        if fb:
+            out["weekly"] = load_gh_period(fb, "weekly")
+            used.append(os.path.basename(fb))
+    out["sources_used"] = used
+    return out
+
+
+def is_offline_requested():
+    """读 config/runtime.yaml 的 mode；offline 则启用离线采集。"""
+    try:
+        from yamlutil import load_file
+        cfg = load_file(os.path.join(ROOT, "config", "runtime.yaml")) or {}
+        return str(cfg.get("mode", "online")).lower() == "offline"
+    except Exception:
+        return False
+
+
 def collect_github(date_str):
     from yamlutil import load_file
     cfg = load_file(os.path.join(SRC, "apis.yaml"))
@@ -219,20 +347,27 @@ def main():
     ap.add_argument("--date", required=True, help="日期键 YYYY-MM-DD")
     ap.add_argument("--rss", action="store_true")
     ap.add_argument("--github", action="store_true")
+    ap.add_argument("--offline", action="store_true",
+                    help="离线模式：仅用本地缓存与语料，不访问任何外网")
     args = ap.parse_args()
+    offline = args.offline or is_offline_requested()
     do_all = not (args.rss or args.github)
+    if offline:
+        print("[offline] 离线采集：仅使用本地缓存（data/collected/）与语料（sources/corpus/）")
 
     if args.rss or do_all:
-        rss = collect_rss(args.date)
+        rss = collect_rss_offline(args.date) if offline else collect_rss(args.date)
         with open(os.path.join(OUT, f"rss_{args.date}.json"), "w", encoding="utf-8") as f:
             json.dump(rss, f, ensure_ascii=False, indent=2)
-        print(f"RSS: {rss['count']} 条（errors={len(rss['errors'])}）")
+        print(f"RSS: {rss['count']} 条（errors={len(rss['errors'])}）"
+              + (f" 来源={rss.get('sources_used')}" if offline else ""))
 
     if args.github or do_all:
-        gh = collect_github(args.date)
+        gh = collect_github_offline(args.date) if offline else collect_github(args.date)
         with open(os.path.join(OUT, f"gh_{args.date}.json"), "w", encoding="utf-8") as f:
             json.dump(gh, f, ensure_ascii=False, indent=2)
-        print(f"GitHub: daily={len(gh['daily'])} weekly={len(gh['weekly'])}（errors={len(gh['errors'])}）")
+        print(f"GitHub: daily={len(gh['daily'])} weekly={len(gh['weekly'])}（errors={len(gh['errors'])}）"
+              + (f" 来源={gh.get('sources_used')}" if offline else ""))
 
 
 if __name__ == "__main__":

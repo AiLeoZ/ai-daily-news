@@ -205,15 +205,9 @@
       "period": "weekly"
     }
   ],
-  "errors": [
-    {
-      "period": "weekly",
-      "error": "IncompleteRead: IncompleteRead(610944 bytes read)"
-    },
-    {
-      "period": "weekly",
-      "fallback": "gh_2026-08-03.json",
-      "note": "当日抓取为空，已复用最近一次成功的 GitHub 数据"
-    }
+  "errors": [],
+  "offline": true,
+  "sources_used": [
+    "gh_2026-08-04.json"
   ]
 }
