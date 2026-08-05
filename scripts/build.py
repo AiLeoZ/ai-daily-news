@@ -102,7 +102,7 @@ def render_day_html(date, entry, asset_rel):
         {f'<a class="summary-btn" href="{asset_rel}{summary_path}" target="_blank" style="text-decoration:none">⚡ 速览模式</a>' if summary_path else ''}
         {f'<a class="poster-btn" href="{asset_rel}{poster_path}" target="_blank" style="text-decoration:none">🖼 今日海报</a>' if poster_path else ''}
         <span class="viewing-date">{fmt_date(date)}</span>
-        <a class="latest-btn" href="{asset_rel}../index.html" style="text-decoration:none">首页</a>
+        <a class="latest-btn" href="{asset_rel}index.html" style="text-decoration:none">首页</a>
       </div>
     </div>
   </header>
@@ -134,7 +134,7 @@ def render_day_html(date, entry, asset_rel):
         <a class="history-select" style="text-decoration:none" href="{asset_rel}history.html">查看全部日期 →</a>
       </div>
       <div class="history-bar">
-        <a class="date-chip" style="text-decoration:none" href="{asset_rel}../index.html">最新一日</a>
+        <a class="date-chip" style="text-decoration:none" href="{asset_rel}index.html">最新一日</a>
         <a class="date-chip" style="text-decoration:none" href="{asset_rel}history.html">历史索引</a>
       </div>
     </div>
