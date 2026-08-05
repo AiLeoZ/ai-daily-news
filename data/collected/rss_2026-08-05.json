@@ -1,7 +1,71 @@
 {
   "date": "2026-08-05",
-  "count": 498,
+  "count": 497,
   "items": [
+    {
+      "source": "InfoQ 中国",
+      "title": "IPO冲刺中，智元机器人核心班底“华为化”：前谷歌科学家从合伙人名单消失",
+      "link": "https://www.infoq.cn/article/mFDVYdsliuDByQKcWFkh?utm_source=rss&utm_medium=article",
+      "published": "Wed, 05 Aug 2026 17:00:00 GMT",
+      "published_iso": "2026-08-06",
+      "summary": "点击查看原文>"
+    },
+    {
+      "source": "InfoQ 中国",
+      "title": "AICon 深圳 2026 全日程揭晓｜聚焦 Agent 工程化，构建可靠智能的技术路径",
+      "link": "https://www.infoq.cn/article/1Xo5TimSeStpOARWhElb?utm_source=rss&utm_medium=article",
+      "published": "Wed, 05 Aug 2026 16:14:30 GMT",
+      "published_iso": "2026-08-06",
+      "summary": "点击查看原文>"
+    },
+    {
+      "source": "InfoQ 中国",
+      "title": "可观测性厂商 AI 大战开始：Grafana、Datadog、Splunk 全部入场",
+      "link": "https://www.infoq.cn/article/0slNEHoKwzuJdxD7D1fJ?utm_source=rss&utm_medium=article",
+      "published": "Wed, 05 Aug 2026 16:00:00 GMT",
+      "published_iso": "2026-08-06",
+      "summary": "点击查看原文>"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "AMD&#8217;s data center business is booming while gaming takes a backseat",
+      "link": "https://www.theverge.com/tech/975381/amd-q2-2026-earnings-ai-gaming-ryzen",
+      "published": "2026-08-04T16:57:49-04:00",
+      "published_iso": "2026-08-05",
+      "summary": "Driven by demand for AI capacity, AMD's data center revenue more than doubled year-over-year in its latest earnings report, reaching $6.7 billion. That's up from $5.8 billion in Q1, and jumping 107 percent from the $3.2 billion it reported for the same period a year ago. During Tuesday's earnings call, AMD CEO Lisa Su said [&#8230;]"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "SpaceX made more revenue as an AI company than a space company",
+      "link": "https://www.theverge.com/science/975335/spacex-made-more-money-as-a-neocloud",
+      "published": "2026-08-04T16:47:55-04:00",
+      "published_iso": "2026-08-05",
+      "summary": "SpaceX's AI revenue grew more than three times to $2.6 billion from the year before, mostly because of deals that the company made to provide compute to other AI companies, according to SpaceX's quarterly earnings. The AI division, which the company said in its documents to go public was the source of most of its [&#8230;]"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "How an OpenAI influencer trip backfired",
+      "link": "https://www.theverge.com/tech/975173/openai-influencers-brand-trip-ai-backlash-marketing",
+      "published": "2026-08-04T13:46:41-04:00",
+      "published_iso": "2026-08-05",
+      "summary": "The brand trip is a right of passage for influencers. It's a mark of legitimacy that a sponsor wants to invite them on an all-expenses-paid vacation, often with luxurious freebies and activities. Trips can also spur hard feelings from uninvited influencers, trigger criticism from the public, and project a certain frivolousness. Usually it is fast [&#8230;]"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "‘Not healthy’ LLM use is more common than you think",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/975180/llm-ai-chatbot-use-not-healthy",
+      "published": "2026-08-04T13:33:46-04:00",
+      "published_iso": "2026-08-05",
+      "summary": "Hank Green, a popular YouTuber and science communicator, said he is stepping back from production amid intense criticism over his use of AI. Green described his AI usage as \"not healthy,\" but stressed that he used it for finding research sources and not to write scripts. Much of the ensuing firestorm in this corner of [&#8230;]"
+    },
+    {
+      "source": "OpenAI News",
+      "title": "Third-party cyber evaluations involving OpenAI models",
+      "link": "https://openai.com/index/third-party-cyber-evaluations-involving-openai-models",
+      "published": "Tue, 04 Aug 2026 19:00:00 GMT",
+      "published_iso": "2026-08-05",
+      "summary": "OpenAI explains recent third-party cybersecurity evaluation incidents and outlines new safeguards to strengthen AI model testing and evaluation."
+    },
     {
       "source": "TechCrunch AI",
       "title": "SpaceX has bought $329M worth of Tesla Megapacks so far this year",
@@ -41,46 +105,6 @@
       "published": "Tue, 04 Aug 2026 19:28:49 +0000",
       "published_iso": "2026-08-05",
       "summary": "The week-old Open Secure AI Alliance, spearheaded by Nvidia and grown to over 120 companies, already has proposals out for defending against AI agents."
-    },
-    {
-      "source": "OpenAI News",
-      "title": "Third-party cyber evaluations involving OpenAI models",
-      "link": "https://openai.com/index/third-party-cyber-evaluations-involving-openai-models",
-      "published": "Tue, 04 Aug 2026 19:00:00 GMT",
-      "published_iso": "2026-08-05",
-      "summary": "OpenAI explains recent third-party cybersecurity evaluation incidents and outlines new safeguards to strengthen AI model testing and evaluation."
-    },
-    {
-      "source": "The Verge AI",
-      "title": "AMD&#8217;s data center business is booming while gaming takes a backseat",
-      "link": "https://www.theverge.com/tech/975381/amd-q2-2026-earnings-ai-gaming-ryzen",
-      "published": "2026-08-04T16:57:49-04:00",
-      "published_iso": "2026-08-05",
-      "summary": "Driven by demand for AI capacity, AMD's data center revenue more than doubled year-over-year in its latest earnings report, reaching $6.7 billion. That's up from $5.8 billion in Q1, and jumping 107 percent from the $3.2 billion it reported for the same period a year ago. During Tuesday's earnings call, AMD CEO Lisa Su said [&#8230;]"
-    },
-    {
-      "source": "The Verge AI",
-      "title": "SpaceX made more revenue as an AI company than a space company",
-      "link": "https://www.theverge.com/science/975335/spacex-made-more-money-as-a-neocloud",
-      "published": "2026-08-04T16:47:55-04:00",
-      "published_iso": "2026-08-05",
-      "summary": "SpaceX's AI revenue grew more than three times to $2.6 billion from the year before, mostly because of deals that the company made to provide compute to other AI companies, according to SpaceX's quarterly earnings. The AI division, which the company said in its documents to go public was the source of most of its [&#8230;]"
-    },
-    {
-      "source": "The Verge AI",
-      "title": "How an OpenAI influencer trip backfired",
-      "link": "https://www.theverge.com/tech/975173/openai-influencers-brand-trip-ai-backlash-marketing",
-      "published": "2026-08-04T13:46:41-04:00",
-      "published_iso": "2026-08-05",
-      "summary": "The brand trip is a right of passage for influencers. It's a mark of legitimacy that a sponsor wants to invite them on an all-expenses-paid vacation, often with luxurious freebies and activities. Trips can also spur hard feelings from uninvited influencers, trigger criticism from the public, and project a certain frivolousness. Usually it is fast [&#8230;]"
-    },
-    {
-      "source": "The Verge AI",
-      "title": "‘Not healthy’ LLM use is more common than you think",
-      "link": "https://www.theverge.com/ai-artificial-intelligence/975180/llm-ai-chatbot-use-not-healthy",
-      "published": "2026-08-04T13:33:46-04:00",
-      "published_iso": "2026-08-05",
-      "summary": "Hank Green, a popular YouTuber and science communicator, said he is stepping back from production amid intense criticism over his use of AI. Green described his AI usage as \"not healthy,\" but stressed that he used it for finding research sources and not to write scripts. Much of the ensuing firestorm in this corner of [&#8230;]"
     },
     {
       "source": "ArXiv cs.AI",
@@ -3412,6 +3436,14 @@
     },
     {
       "source": "InfoQ 中国",
+      "title": "Ming-Flash-Omni：全模态统一大模型的关键技术与实践",
+      "link": "https://www.infoq.cn/article/OlBv9DATXabu0bb4kAPt?utm_source=rss&utm_medium=article",
+      "published": "Wed, 05 Aug 2026 15:57:15 GMT",
+      "published_iso": "2026-08-05",
+      "summary": "点击查看原文>"
+    },
+    {
+      "source": "InfoQ 中国",
       "title": "开出AI界最高薪的Anthropic，抱怨员工为钱而来？全网“阴阳”：和你死活反开源一样",
       "link": "https://www.infoq.cn/article/qYp5NCloR64emA3Bq11F?utm_source=rss&utm_medium=article",
       "published": "Wed, 05 Aug 2026 15:25:00 GMT",
@@ -3539,28 +3571,12 @@
       "summary": "点击查看原文>"
     },
     {
-      "source": "InfoQ 中国",
-      "title": "空客将“免受域外法律约束”列为其云服务招标的评分标准",
-      "link": "https://www.infoq.cn/article/oef2KK0GlgTwuwHr4B8Q?utm_source=rss&utm_medium=article",
-      "published": "Tue, 04 Aug 2026 18:00:00 GMT",
+      "source": "量子位",
+      "title": "114B参数、6B激活，Sand.ai刚刚开源全球首个千亿MoE视频生成模型",
+      "link": "https://www.qbitai.com/2026/08/466847.html",
+      "published": "Wed, 05 Aug 2026 07:05:41 +0000",
       "published_iso": "2026-08-05",
-      "summary": "点击查看原文>"
-    },
-    {
-      "source": "InfoQ 中国",
-      "title": "Zalando 如何构建了一个每秒能够处理 100 万次请求的客户端进程内负载均衡器",
-      "link": "https://www.infoq.cn/article/97oCpVItccS9jN4lxRdA?utm_source=rss&utm_medium=article",
-      "published": "Tue, 04 Aug 2026 16:27:00 GMT",
-      "published_iso": "2026-08-05",
-      "summary": "点击查看原文>"
-    },
-    {
-      "source": "InfoQ 中国",
-      "title": "Agent 的错误记忆，比没有记忆更加危险！",
-      "link": "https://www.infoq.cn/video/QLwCqPT2T2ZwzbTs8xud?utm_source=rss&utm_medium=article",
-      "published": "Tue, 04 Aug 2026 16:23:54 GMT",
-      "published_iso": "2026-08-05",
-      "summary": "点击查看原文>"
+      "summary": "10秒1080P，成本只要5毛钱"
     },
     {
       "source": "量子位",
@@ -3585,6 +3601,54 @@
       "published": "Wed, 05 Aug 2026 04:28:31 +0000",
       "published_iso": "2026-08-05",
       "summary": "二季度AI收入暴涨247%"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "Texas says data centers must pass an audit before connecting to the grid",
+      "link": "https://www.theverge.com/policy/975071/texas-data-center-audit",
+      "published": "2026-08-04T11:33:21-04:00",
+      "published_iso": "2026-08-04",
+      "summary": "Texas announced new a audit on data centers that could slow approval for new facilities seeking to connect to the state energy grid. Governor Greg Abbott (R) on Monday directed the Public Utility Commission of Texas (PUCT) and the Electric Reliability Council of Texas (ERCOT) to verify and audit new data center proposals, writing that [&#8230;]"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "OpenAI drags Apple’s lawsuit into the court of public opinion",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/974914/openai-blog-response-apple-lawsuit-messages",
+      "published": "2026-08-04T07:27:55-04:00",
+      "published_iso": "2026-08-04",
+      "summary": "Apple's legal battle against OpenAI just got messier now that the ChatGPT-maker has publicly aired receipts to counter Apple's version of events. In a blog post published overnight titled \"Apple is getting this wrong,\" OpenAI said that Apple's lawsuit accusing it of stealing trade secrets is \"careless, aggressive, and oddly personal,\" sharing iMessage and email [&#8230;]"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "Can Reddit fend off a new wave of AI SEO spam?",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/973098/reddit-ai-search-seo-marketing-brands-spam",
+      "published": "2026-08-04T06:00:00-04:00",
+      "published_iso": "2026-08-04",
+      "summary": "Earlier this year, a Reddit user had asked members of a skincare-focused subreddit if anyone had tried a specific hypochlorous acid spray, a product often used for acne. There were dozens of responses; one from a user named Primary-Taro4254 seemed innocuous enough, at least at first. \"I haven't personally tried [that brand] so I can't [&#8230;]"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "Europe’s AI labeling and transparency rules are now in effect",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/974571/eu-ai-act-transparency-labels-rules-deepfakes",
+      "published": "2026-08-03T13:38:45-04:00",
+      "published_iso": "2026-08-04",
+      "summary": "The European Union has ushered in some additional rules that aim to make it easier for people to identify chatbots and AI deepfakes online. The new transparency obligations under the bloc's landmark AI Act came into effect on August 2nd, requiring companies to disclose when people are interacting with AI models, and if content has [&#8230;]"
+    },
+    {
+      "source": "OpenAI News",
+      "title": "New ways to learn and teach with ChatGPT Work and Codex",
+      "link": "https://openai.com/index/learn-teach-chatgpt-work-codex",
+      "published": "Tue, 04 Aug 2026 00:00:00 GMT",
+      "published_iso": "2026-08-04",
+      "summary": "Explore new education plugins for ChatGPT Work and Codex that help K–12 teachers, college educators, and students learn, teach, research, and build."
+    },
+    {
+      "source": "OpenAI News",
+      "title": "Apple is getting this wrong",
+      "link": "https://openai.com/index/apple-is-getting-this-wrong",
+      "published": "Mon, 03 Aug 2026 22:00:00 GMT",
+      "published_iso": "2026-08-04",
+      "summary": "OpenAI addresses Apple’s baseless lawsuit, corrects claims about its employees, and shares messages documenting what happened."
     },
     {
       "source": "TechCrunch AI",
@@ -3691,68 +3755,12 @@
       "summary": "This story originally appeared in The Algorithm, our weekly newsletter on AI. To get stories like this in your inbox first,&#160;sign up here. Humanoid robots usually elicit more cringe than awe: They stumble, kick children, and despite advances are still worse at using their hands than my toddler. It’s a nascent industry, and such robots&#8230;"
     },
     {
-      "source": "OpenAI News",
-      "title": "New ways to learn and teach with ChatGPT Work and Codex",
-      "link": "https://openai.com/index/learn-teach-chatgpt-work-codex",
-      "published": "Tue, 04 Aug 2026 00:00:00 GMT",
-      "published_iso": "2026-08-04",
-      "summary": "Explore new education plugins for ChatGPT Work and Codex that help K–12 teachers, college educators, and students learn, teach, research, and build."
-    },
-    {
-      "source": "OpenAI News",
-      "title": "Apple is getting this wrong",
-      "link": "https://openai.com/index/apple-is-getting-this-wrong",
-      "published": "Mon, 03 Aug 2026 22:00:00 GMT",
-      "published_iso": "2026-08-04",
-      "summary": "OpenAI addresses Apple’s baseless lawsuit, corrects claims about its employees, and shares messages documenting what happened."
-    },
-    {
-      "source": "The Verge AI",
-      "title": "Texas says data centers must pass an audit before connecting to the grid",
-      "link": "https://www.theverge.com/policy/975071/texas-data-center-audit",
-      "published": "2026-08-04T11:33:21-04:00",
-      "published_iso": "2026-08-04",
-      "summary": "Texas announced new a audit on data centers that could slow approval for new facilities seeking to connect to the state energy grid. Governor Greg Abbott (R) on Monday directed the Public Utility Commission of Texas (PUCT) and the Electric Reliability Council of Texas (ERCOT) to verify and audit new data center proposals, writing that [&#8230;]"
-    },
-    {
-      "source": "The Verge AI",
-      "title": "OpenAI drags Apple’s lawsuit into the court of public opinion",
-      "link": "https://www.theverge.com/ai-artificial-intelligence/974914/openai-blog-response-apple-lawsuit-messages",
-      "published": "2026-08-04T07:27:55-04:00",
-      "published_iso": "2026-08-04",
-      "summary": "Apple's legal battle against OpenAI just got messier now that the ChatGPT-maker has publicly aired receipts to counter Apple's version of events. In a blog post published overnight titled \"Apple is getting this wrong,\" OpenAI said that Apple's lawsuit accusing it of stealing trade secrets is \"careless, aggressive, and oddly personal,\" sharing iMessage and email [&#8230;]"
-    },
-    {
-      "source": "The Verge AI",
-      "title": "Can Reddit fend off a new wave of AI SEO spam?",
-      "link": "https://www.theverge.com/ai-artificial-intelligence/973098/reddit-ai-search-seo-marketing-brands-spam",
-      "published": "2026-08-04T06:00:00-04:00",
-      "published_iso": "2026-08-04",
-      "summary": "Earlier this year, a Reddit user had asked members of a skincare-focused subreddit if anyone had tried a specific hypochlorous acid spray, a product often used for acne. There were dozens of responses; one from a user named Primary-Taro4254 seemed innocuous enough, at least at first. \"I haven't personally tried [that brand] so I can't [&#8230;]"
-    },
-    {
-      "source": "The Verge AI",
-      "title": "Europe’s AI labeling and transparency rules are now in effect",
-      "link": "https://www.theverge.com/ai-artificial-intelligence/974571/eu-ai-act-transparency-labels-rules-deepfakes",
-      "published": "2026-08-03T13:38:45-04:00",
-      "published_iso": "2026-08-04",
-      "summary": "The European Union has ushered in some additional rules that aim to make it easier for people to identify chatbots and AI deepfakes online. The new transparency obligations under the bloc's landmark AI Act came into effect on August 2nd, requiring companies to disclose when people are interacting with AI models, and if content has [&#8230;]"
-    },
-    {
       "source": "Google AI Blog",
       "title": "The latest AI news we announced in July 2026",
       "link": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-july-2026/",
       "published": "Tue, 04 Aug 2026 13:00:00 +0000",
       "published_iso": "2026-08-04",
       "summary": "Here are Google’s latest AI updates from July 2026"
-    },
-    {
-      "source": "InfoQ 中国",
-      "title": "Agent 记忆，不能只靠聊天记录",
-      "link": "https://www.infoq.cn/article/qm3RHL133SESFZJGrmeA?utm_source=rss&utm_medium=article",
-      "published": "Tue, 04 Aug 2026 14:37:52 GMT",
-      "published_iso": "2026-08-04",
-      "summary": "点击查看原文>"
     },
     {
       "source": "量子位",
@@ -3803,12 +3811,36 @@
       "summary": "那还说啥了梁圣，我订阅费全给你就是了呗"
     },
     {
-      "source": "量子位",
-      "title": "资本重仓端侧物理AI：前海母基金数亿元押注，Om AI联汇加速端侧AI商业化落地",
-      "link": "https://www.qbitai.com/2026/08/465785.html",
-      "published": "Tue, 04 Aug 2026 06:47:06 +0000",
-      "published_iso": "2026-08-04",
-      "summary": ""
+      "source": "The Verge AI",
+      "title": "China&#8217;s Alibaba takes another swipe at America’s AI supremacy",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/974342/alibaba-qwen-max-open-weight-ai",
+      "published": "2026-08-03T07:01:11-04:00",
+      "published_iso": "2026-08-03",
+      "summary": "Chinese tech giant Alibaba released what it says is its largest and \"most capable AI model to date,\" claiming performance rivaling the best systems from US frontier labs Anthropic and OpenAI, as well as domestic rivals like Moonshot AI's Kimi K3. Alibaba said it was making the model, Qwen3.8-Max, widely available to users in a [&#8230;]"
+    },
+    {
+      "source": "The Verge AI",
+      "title": "Fender’s CEO seems to think your bandmates are just analog AI",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/974265/fender-ceo-bud-cole-ai-music",
+      "published": "2026-08-02T15:36:08-04:00",
+      "published_iso": "2026-08-03",
+      "summary": "Fender CEO Edward \"Bud\" Cole gave an interview to T3 in May celebrating the 75th anniversary of the Telecaster with comments on AI and music that initially flew under the radar. But it has started making the rounds recently, pouring more fuel on an already raging fire of bad PR following the company pissing off [&#8230;]"
+    },
+    {
+      "source": "OpenAI News",
+      "title": "How we built a realtime system for responsive voice AI in six months",
+      "link": "https://openai.com/index/continuous-voice-interaction-with-gpt-live",
+      "published": "Mon, 03 Aug 2026 07:00:00 GMT",
+      "published_iso": "2026-08-03",
+      "summary": "GPT-Live enables continuous voice interaction with AI, using a turnless speech model and low-latency architecture for faster, more natural conversations."
+    },
+    {
+      "source": "OpenAI News",
+      "title": "Circles powers telco personalization with OpenAI technology",
+      "link": "https://openai.com/index/circles",
+      "published": "Mon, 03 Aug 2026 00:00:00 GMT",
+      "published_iso": "2026-08-03",
+      "summary": "Circles uses the OpenAI API and Codex to power AI-native telco experiences, increasing ARPU by 22%, reducing churn by 9%, and improving development efficiency."
     },
     {
       "source": "TechCrunch AI",
@@ -3833,38 +3865,6 @@
       "published": "Mon, 03 Aug 2026 08:30:05 +0000",
       "published_iso": "2026-08-03",
       "summary": "MIT Technology Review Explains: Let our writers untangle the complex, messy world of technology to help you understand what’s coming next. You can read more from the series here. When two OpenAI models hacked into the website Hugging Face in July, they weren’t trying to make money or commit sabotage—they were just looking for answers&#8230;"
-    },
-    {
-      "source": "OpenAI News",
-      "title": "How we built a realtime system for responsive voice AI in six months",
-      "link": "https://openai.com/index/continuous-voice-interaction-with-gpt-live",
-      "published": "Mon, 03 Aug 2026 07:00:00 GMT",
-      "published_iso": "2026-08-03",
-      "summary": "GPT-Live enables continuous voice interaction with AI, using a turnless speech model and low-latency architecture for faster, more natural conversations."
-    },
-    {
-      "source": "OpenAI News",
-      "title": "Circles powers telco personalization with OpenAI technology",
-      "link": "https://openai.com/index/circles",
-      "published": "Mon, 03 Aug 2026 00:00:00 GMT",
-      "published_iso": "2026-08-03",
-      "summary": "Circles uses the OpenAI API and Codex to power AI-native telco experiences, increasing ARPU by 22%, reducing churn by 9%, and improving development efficiency."
-    },
-    {
-      "source": "The Verge AI",
-      "title": "China&#8217;s Alibaba takes another swipe at America’s AI supremacy",
-      "link": "https://www.theverge.com/ai-artificial-intelligence/974342/alibaba-qwen-max-open-weight-ai",
-      "published": "2026-08-03T07:01:11-04:00",
-      "published_iso": "2026-08-03",
-      "summary": "Chinese tech giant Alibaba released what it says is its largest and \"most capable AI model to date,\" claiming performance rivaling the best systems from US frontier labs Anthropic and OpenAI, as well as domestic rivals like Moonshot AI's Kimi K3. Alibaba said it was making the model, Qwen3.8-Max, widely available to users in a [&#8230;]"
-    },
-    {
-      "source": "The Verge AI",
-      "title": "Fender’s CEO seems to think your bandmates are just analog AI",
-      "link": "https://www.theverge.com/ai-artificial-intelligence/974265/fender-ceo-bud-cole-ai-music",
-      "published": "2026-08-02T15:36:08-04:00",
-      "published_iso": "2026-08-03",
-      "summary": "Fender CEO Edward \"Bud\" Cole gave an interview to T3 in May celebrating the 75th anniversary of the Telecaster with comments on AI and music that initially flew under the radar. But it has started making the rounds recently, pouring more fuel on an already raging fire of bad PR following the company pissing off [&#8230;]"
     },
     {
       "source": "Google AI Blog",
@@ -3923,14 +3923,6 @@
       "summary": "OpenAI disrupted a Cambodia-based scam operation using ChatGPT to support investment, romance, gambling, and impersonation schemes."
     },
     {
-      "source": "MIT Tech Review AI",
-      "title": "A fundamental flaw leaves LLMs strikingly vulnerable to attack",
-      "link": "https://www.technologyreview.com/2026/07/30/1140927/a-fundamental-flaw-leaves-llms-vulnerable-to-attack/",
-      "published": "Thu, 30 Jul 2026 10:15:19 +0000",
-      "published_iso": "2026-07-30",
-      "summary": "It is impossible to make large language models fully secure against hacks because of a fundamental flaw in how they work, a team of researchers argue in a paper presented at the International Conference on Machine Learning, a top AI conference, this month. The claim has huge implications for the safety of this technology, which&#8230;"
-    },
-    {
       "source": "OpenAI News",
       "title": "Advancing the price-performance frontier with GPT-5.6",
       "link": "https://openai.com/index/advancing-the-price-performance-frontier-with-gpt-5-6",
@@ -3947,6 +3939,14 @@
       "summary": "avatarin uses OpenAI’s GPT-Realtime to give Yamada Denki shoppers 24/7 multilingual support. In two weeks, 30,000 people used the agent and 92% of survey responses were positive."
     },
     {
+      "source": "MIT Tech Review AI",
+      "title": "A fundamental flaw leaves LLMs strikingly vulnerable to attack",
+      "link": "https://www.technologyreview.com/2026/07/30/1140927/a-fundamental-flaw-leaves-llms-vulnerable-to-attack/",
+      "published": "Thu, 30 Jul 2026 10:15:19 +0000",
+      "published_iso": "2026-07-30",
+      "summary": "It is impossible to make large language models fully secure against hacks because of a fundamental flaw in how they work, a team of researchers argue in a paper presented at the International Conference on Machine Learning, a top AI conference, this month. The claim has huge implications for the safety of this technology, which&#8230;"
+    },
+    {
       "source": "Google DeepMind",
       "title": "Gemini Robotics ER 2: powering robotics with video understanding, task orchestration, and multi-robot collaboration",
       "link": "https://deepmind.google/blog/gemini-robotics-er-2-powering-robotics-with-video-understanding-task-orchestration-and-multi-robot-collaboration/",
@@ -3961,14 +3961,6 @@
       "published": "Wed, 29 Jul 2026 16:02:10 +0000",
       "published_iso": "2026-07-30",
       "summary": ""
-    },
-    {
-      "source": "MIT Tech Review AI",
-      "title": "The AI Hype Index: Unsexy AI",
-      "link": "https://www.technologyreview.com/2026/07/29/1140795/the-ai-hype-index-unsexy-ai/",
-      "published": "Wed, 29 Jul 2026 08:42:57 +0000",
-      "published_iso": "2026-07-29",
-      "summary": "It feels bad enough when an open letter signed by leading economists warns that AI might steal your job. The fact it may soon be better than you at making dinner? Insult to injury. But that’s exactly what the company 1X promised when it showed off a pair of new, impressively dexterous (and, to some,&#8230;"
     },
     {
       "source": "OpenAI News",
@@ -3996,19 +3988,19 @@
   ],
   "offline": false,
   "sources_used": [
+    "The Verge AI",
+    "OpenAI News",
     "TechCrunch AI",
     "MIT Tech Review AI",
-    "OpenAI News",
-    "The Verge AI",
     "Google AI Blog",
-    "Google DeepMind",
     "ArXiv cs.AI",
+    "Google DeepMind",
     "InfoQ 中国",
     "量子位"
   ],
   "sources_failed": [
     "36氪"
   ],
-  "today_count": 448,
-  "collected_at": "2026-08-05T15:55:46+08:00"
+  "today_count": 447,
+  "collected_at": "2026-08-05T17:11:12+08:00"
 }
