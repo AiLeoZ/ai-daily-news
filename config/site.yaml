@@ -7,7 +7,11 @@ subtitle: "每天追踪最新 AI 动态与 GitHub 趋势 · 每日更新"
 language: "zh-CN"
 contact_email: "zhuleo@agent.qq.com"
 # 公开站点地址（海报二维码指向此处；重新部署换域名后改这一行即可，无需改代码）
-site_url: "https://3a2c7e71a31748508dbe8b75e7cdeca9.bj7.agentos-app.net"
+# 2026-08-05 迁移到个人 GitHub Pages：https://aileoz.github.io/ai-daily-news/
+#   · 当日（feed.json 中最新一天）海报二维码 → 站点根地址（即本值）
+#   · 历史（非最新）海报二维码 → 该日期归档页 <本值>/output/archive/<日期>.html
+# 二维码具体指向由 scripts/poster.py 的 qr_url_for() 按日期计算，本值是其基础地址。
+site_url: "https://aileoz.github.io/ai-daily-news/"
 
 # 更新频率（用于页脚展示与调度提示，实际调度由云端定时任务控制）
 update_time: "23:59"
