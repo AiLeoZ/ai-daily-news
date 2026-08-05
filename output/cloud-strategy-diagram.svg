@@ -1,0 +1,62 @@
+<svg viewBox="0 0 680 470" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>AI 每日资讯自动化：四层能力需求与平台选型</title>
+  <desc>一个自动化任务需要在同一平台满足四层能力：定时触发、计算执行、状态持久化、静态托管。个人 GitHub 账号配合 Actions 与 Pages 可以一站式覆盖全部四层，而公司 GitHub（EMU 企业托管账号）卡在权限层无法发布 Pages。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="44" font-family="var(--font-sans)" font-size="15" font-weight="500" fill="#444441">一个任务 = 四层能力需求</text>
+  <text x="40" y="66" font-family="var(--font-sans)" font-size="13" font-weight="400" fill="#5F5E5A">同一平台一站式满足，才能脱离本地电脑每天自动跑</text>
+
+  <g>
+    <rect x="40" y="90" width="300" height="70" rx="12" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+    <text x="190" y="116" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="500" fill="#444441">定时触发</text>
+    <text x="190" y="138" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#5F5E5A">每天 06:00 自动点火</text>
+  </g>
+  <g>
+    <rect x="40" y="176" width="300" height="70" rx="12" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+    <text x="190" y="202" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="500" fill="#444441">计算执行</text>
+    <text x="190" y="224" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#5F5E5A">generate.py 无头跑（用 API key）</text>
+  </g>
+  <g>
+    <rect x="40" y="262" width="300" height="70" rx="12" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+    <text x="190" y="288" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="500" fill="#444441">状态持久化</text>
+    <text x="190" y="310" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#5F5E5A">代码 + 数据 + 日志存仓库</text>
+  </g>
+  <g>
+    <rect x="40" y="348" width="300" height="70" rx="12" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+    <text x="190" y="374" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="500" fill="#444441">静态托管</text>
+    <text x="190" y="396" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#5F5E5A">结果网站任意访问</text>
+  </g>
+
+  <g>
+    <rect x="380" y="90" width="260" height="328" rx="12" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+    <text x="510" y="120" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="500" fill="#0C447C">个人 GitHub 账号</text>
+    <text x="510" y="140" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#185FA5">Actions + Pages · 四层合一</text>
+
+    <path d="M398 170 L403 175 L411 166" fill="none" stroke="#185FA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="424" y="170" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="#0C447C">定时触发</text>
+    <text x="424" y="188" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#185FA5">Actions cron 调度</text>
+
+    <path d="M398 226 L403 231 L411 222" fill="none" stroke="#185FA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="424" y="226" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="#0C447C">计算执行</text>
+    <text x="424" y="244" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#185FA5">无头 runner 调 API</text>
+
+    <path d="M398 282 L403 287 L411 278" fill="none" stroke="#185FA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="424" y="282" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="#0C447C">状态持久化</text>
+    <text x="424" y="300" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#185FA5">Git 仓库存全局</text>
+
+    <path d="M398 338 L403 343 L411 334" fill="none" stroke="#185FA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="424" y="338" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="#0C447C">静态托管</text>
+    <text x="424" y="356" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#185FA5">Pages 发布结果站</text>
+  </g>
+
+  <polyline points="338,125 376,176" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <polyline points="338,211 376,232" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <polyline points="338,297 376,288" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <polyline points="338,383 376,344" fill="none" stroke="#5F5E5A" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <text x="40" y="446" font-family="var(--font-sans)" font-size="12" font-weight="400" fill="#5F5E5A">公司 GitHub（EMU 企业托管账号）卡在权限层，无法发布 Pages —— 换「个人账号」即可走通</text>
+</svg>

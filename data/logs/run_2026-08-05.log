@@ -620,3 +620,7 @@ SELF_CHECK: {"summary-h2-1": true, "summary-h2-2": true, "summary-forbid-通俗�
 
 ✓ 日期校验通过：12 项检查全部一致，无错配/串用。
 [7/7] publish (git push best-effort) ...
+[WARN] git push 失败（离线或权限不足，已跳过，不阻塞）
+================ 完成 @ 2026-08-05 ================
+产物：data/feed.json · output/archive/2026-08-05.html · output/summary/2026-08-05.html · output/poster/2026-08-05.png
+部署（CloudStudio）由自动化/手动执行 best-effort；日志见 /Users/zhulei/WorkBuddy/2026-08-03-11-34-41/data/logs/run_2026-08-05.log
