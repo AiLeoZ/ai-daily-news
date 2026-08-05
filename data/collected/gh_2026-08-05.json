@@ -8,7 +8,7 @@
       "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
       "language": "TypeScript",
       "description": "TencentDB Agent Memory is a team-level memory hub for AI Agents — turning conversations, docs, and code into four reusable memory assets (Chat Memory, Skill, LLM-Wiki, Code-Graph) that are governed, shared, and equipped across agents and frameworks.",
-      "total_stars": 13863,
+      "total_stars": 14009,
       "gained": 1111,
       "period": "daily"
     },
@@ -18,7 +18,7 @@
       "url": "https://github.com/zhaoxuya520/reverse-skill",
       "language": "PowerShell",
       "description": "Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack AI-powered routing + On-demand toolchain bootstrapping + Self-evolving knowledge base Supports Claude Code, Kiro, Cursor, Cline, and other AI coding clients 逆向/渗透/安全技能路由包 - AI 自动路由 + 按需自举工具链 + 自动进化经验库 | 支持 Claude Code / Kiro / Cursor / Cline 等代码 AI 客户端",
-      "total_stars": 18082,
+      "total_stars": 18210,
       "gained": 2297,
       "period": "daily"
     },
@@ -28,7 +28,7 @@
       "url": "https://github.com/firecrawl/pdf-inspector",
       "language": "Rust",
       "description": "Fast Rust library for PDF inspection, classification, and text extraction. Intelligently detects scanned vs text-based PDFs to enable smart routing decisions.",
-      "total_stars": 10186,
+      "total_stars": 10298,
       "gained": 2540,
       "period": "daily"
     },
@@ -38,7 +38,7 @@
       "url": "https://github.com/uber/ADR",
       "language": "Python",
       "description": "ADR secures enterprise AI agents through observability, security benchmarking, and threat detection. Deployed at Uber.",
-      "total_stars": 723,
+      "total_stars": 749,
       "gained": 148,
       "period": "daily"
     },
@@ -48,7 +48,7 @@
       "url": "https://github.com/obra/superpowers",
       "language": "Shell",
       "description": "An agentic skills framework &amp; software development methodology that works.",
-      "total_stars": 266574,
+      "total_stars": 266647,
       "gained": 653,
       "period": "daily"
     },
@@ -58,7 +58,7 @@
       "url": "https://github.com/microsoft/generative-ai-for-beginners",
       "language": "Jupyter Notebook",
       "description": "21 Lessons, Get Started Building with Generative AI",
-      "total_stars": 116335,
+      "total_stars": 116375,
       "gained": 783,
       "period": "daily"
     },
@@ -68,7 +68,7 @@
       "url": "https://github.com/cypress-io/cypress",
       "language": "TypeScript",
       "description": "Fast, easy and reliable testing for anything that runs in a browser.",
-      "total_stars": 50813,
+      "total_stars": 50826,
       "gained": 11,
       "period": "daily"
     },
@@ -78,7 +78,7 @@
       "url": "https://github.com/lyogavin/airllm",
       "language": "Jupyter Notebook",
       "description": "AirLLM 70B inference with single 4GB GPU",
-      "total_stars": 28465,
+      "total_stars": 28531,
       "gained": 1711,
       "period": "daily"
     },
@@ -88,7 +88,7 @@
       "url": "https://github.com/webpack/webpack",
       "language": "JavaScript",
       "description": "A bundler for javascript and friends. Packs many modules into a few bundled assets. Code Splitting allows for loading parts of the application on demand. Through \"loaders\", modules can be CommonJs, AMD, ES6 modules, CSS, Images, JSON, Coffeescript, LESS, ... and your custom stuff.",
-      "total_stars": 65947,
+      "total_stars": 65954,
       "gained": 10,
       "period": "daily"
     },
@@ -98,7 +98,7 @@
       "url": "https://github.com/gabime/spdlog",
       "language": "C++",
       "description": "Fast C++ logging library.",
-      "total_stars": 29388,
+      "total_stars": 29396,
       "gained": 10,
       "period": "daily"
     }
@@ -110,7 +110,7 @@
       "url": "https://github.com/zhaoxuya520/reverse-skill",
       "language": "PowerShell",
       "description": "Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack AI-powered routing + On-demand toolchain bootstrapping + Self-evolving knowledge base Supports Claude Code, Kiro, Cursor, Cline, and other AI coding clients 逆向/渗透/安全技能路由包 - AI 自动路由 + 按需自举工具链 + 自动进化经验库 | 支持 Claude Code / Kiro / Cursor / Cline 等代码 AI 客户端",
-      "total_stars": 18082,
+      "total_stars": 18210,
       "gained": 8386,
       "period": "weekly"
     },
@@ -120,7 +120,7 @@
       "url": "https://github.com/microsoft/AI-For-Beginners",
       "language": "Jupyter Notebook",
       "description": "12 Weeks, 24 Lessons, AI for All!",
-      "total_stars": 61739,
+      "total_stars": 61775,
       "gained": 8582,
       "period": "weekly"
     },
@@ -130,7 +130,7 @@
       "url": "https://github.com/block/buzz",
       "language": "Rust",
       "description": "A hive mind communication platform",
-      "total_stars": 22602,
+      "total_stars": 22641,
       "gained": 7262,
       "period": "weekly"
     },
@@ -140,7 +140,7 @@
       "url": "https://github.com/virgiliojr94/book-to-skill",
       "language": "Python",
       "description": "Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use while you work.",
-      "total_stars": 16469,
+      "total_stars": 16520,
       "gained": 5420,
       "period": "weekly"
     },
@@ -150,7 +150,7 @@
       "url": "https://github.com/different-ai/openwork",
       "language": "TypeScript",
       "description": "The open-source alternative to Claude Cowork (powered by opencode)",
-      "total_stars": 20943,
+      "total_stars": 20957,
       "gained": 3601,
       "period": "weekly"
     },
@@ -160,7 +160,7 @@
       "url": "https://github.com/ayghri/i-have-adhd",
       "language": "Python",
       "description": "A skill to stop your coding agent from burying the answer. ADHD-friendly output.",
-      "total_stars": 16827,
+      "total_stars": 16861,
       "gained": 4389,
       "period": "weekly"
     },
@@ -170,7 +170,7 @@
       "url": "https://github.com/lyogavin/airllm",
       "language": "Jupyter Notebook",
       "description": "AirLLM 70B inference with single 4GB GPU",
-      "total_stars": 28465,
+      "total_stars": 28531,
       "gained": 3911,
       "period": "weekly"
     },
@@ -180,7 +180,7 @@
       "url": "https://github.com/1jehuang/jcode",
       "language": "Rust",
       "description": "The most RAM efficient harness",
-      "total_stars": 15912,
+      "total_stars": 15927,
       "gained": 3294,
       "period": "weekly"
     },
@@ -190,7 +190,7 @@
       "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
       "language": "TypeScript",
       "description": "TencentDB Agent Memory is a team-level memory hub for AI Agents — turning conversations, docs, and code into four reusable memory assets (Chat Memory, Skill, LLM-Wiki, Code-Graph) that are governed, shared, and equipped across agents and frameworks.",
-      "total_stars": 13863,
+      "total_stars": 14009,
       "gained": 3659,
       "period": "weekly"
     },
@@ -200,7 +200,7 @@
       "url": "https://github.com/opengeos/GeoLibre",
       "language": "TypeScript",
       "description": "A lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data. It runs in the web browser, on the desktop, on mobile, and inside Jupyter notebooks.",
-      "total_stars": 5397,
+      "total_stars": 5404,
       "gained": 2236,
       "period": "weekly"
     }
@@ -211,5 +211,5 @@
     "github-trending:daily",
     "github-trending:weekly"
   ],
-  "collected_at": "2026-08-05T11:05:16+08:00"
+  "collected_at": "2026-08-05T12:52:02+08:00"
 }
