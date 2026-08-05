@@ -7,7 +7,7 @@
   output/index.html               —— 静态首页，展示当日最新内容
 
 预渲染策略：优先用 Python markdown 把 Markdown 转 HTML（产物为纯静态，
-无需运行时 JS）；若环境无 markdown，则回退为内嵌原始 Markdown + marked.js CDN。
+无需运行时 JS）；若环境无 markdown，则回退为内嵌原始 Markdown + marked.js（本地 vendored，无外网依赖）。
 
 用法：
   python3 scripts/build.py                 # 全量构建
@@ -36,7 +36,7 @@ CONTACT = _CFG.get("contact_email", "")
 SECTION_TITLES = _CFG.get("section_titles", {}) or {"aiNews": "AI 新闻", "github": "GitHub 趋势"}
 
 
-def md_to_html(md):
+def md_to_html(md, asset_rel=""):
     if not md or not md.strip():
         return '<p class="loading">今日尚未更新</p>'
     try:
@@ -44,12 +44,12 @@ def md_to_html(md):
         return markdown.markdown(md, extensions=["tables", "fenced_code", "sane_lists"])
     except Exception:
         # 回退：内嵌原始 Markdown，运行时用本地 vendored marked 渲染（无外网依赖）。
-        # 注：托管 venv 已含 markdown 模块，构建期即预渲染为 HTML，本分支在生产环境不会触发。
+        # asset_rel 必须正确指向根级 assets/（归档页为 ../../，首页/历史页为 ../）。
         esc = md.replace("`", "\\`").replace("${", "\\${")
         return (
             '<div class="md-raw" style="display:none">' + esc + "</div>"
             '<div class="md-out"></div>'
-            '<script src="assets/marked.min.js"></script>'
+            f'<script src="{asset_rel}assets/marked.min.js"></script>'
             "<script>document.querySelector('.md-out').innerHTML="
             "marked.parse(document.querySelector('.md-raw').textContent);</script>"
         )
@@ -81,8 +81,8 @@ def render_day_html(date, entry, asset_rel):
         t = datetime.datetime.fromisoformat(iso)
         return f"更新于 {t.year}-{t.month:02d}-{t.day:02d} {t.hour:02d}:{t.minute:02d}"
 
-    ai_html = md_to_html(ai)
-    gh_html = md_to_html(gh)
+    ai_html = md_to_html(ai, asset_rel)
+    gh_html = md_to_html(gh, asset_rel)
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -131,11 +131,11 @@ def render_day_html(date, entry, asset_rel):
     <div class="history-inner">
       <div class="history-head">
         <h3>历史归档</h3>
-        <a class="history-select" style="text-decoration:none" href="{asset_rel}history.html">查看全部日期 →</a>
+        <a class="history-select" style="text-decoration:none" href="{asset_rel}output/history.html">查看全部日期 →</a>
       </div>
       <div class="history-bar">
         <a class="date-chip" style="text-decoration:none" href="{asset_rel}index.html">最新一日</a>
-        <a class="date-chip" style="text-decoration:none" href="{asset_rel}history.html">历史索引</a>
+        <a class="date-chip" style="text-decoration:none" href="{asset_rel}output/history.html">历史索引</a>
       </div>
     </div>
   </section>
@@ -145,7 +145,20 @@ def render_day_html(date, entry, asset_rel):
     {f'<p>联系：<a href="mailto:{CONTACT}">{CONTACT}</a></p>' if CONTACT else ''}
   </footer>
   <script>
-  document.addEventListener('DOMContentLoaded', function() {{\n    document.querySelectorAll('.content table').forEach(function(table) {{\n      var headers = Array.from(table.querySelectorAll('thead th')).map(function(th) {{ return th.textContent.trim(); }});\n      if (!headers.length) return;\n      table.querySelectorAll('tbody tr').forEach(function(row) {{\n        Array.from(row.children).forEach(function(td, i) {{\n          if (headers[i]) td.setAttribute('data-label', headers[i]);\n        }});\n      }});\n    }});\n  }});\n  </script>\n</body>\n</html>"""
+  document.addEventListener('DOMContentLoaded', function() {{
+    document.querySelectorAll('.content table').forEach(function(table) {{
+      var headers = Array.from(table.querySelectorAll('thead th')).map(function(th) {{ return th.textContent.trim(); }});
+      if (!headers.length) return;
+      table.querySelectorAll('tbody tr').forEach(function(row) {{
+        Array.from(row.children).forEach(function(td, i) {{
+          if (headers[i]) td.setAttribute('data-label', headers[i]);
+        }});
+      }});
+    }});
+  }});
+  </script>
+</body>
+</html>"""
 
 
 def render_history_html(dates):
@@ -161,7 +174,7 @@ def render_history_html(dates):
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{SITE_TITLE} · 历史归档</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
   <header class="site-header">
