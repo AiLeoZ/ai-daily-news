@@ -52,17 +52,21 @@ $PY scripts/filter.py --date "$DATE" --section aiNews   --file "$RAW_AI"  || ech
 $PY scripts/filter.py --date "$DATE" --section github    --file "$RAW_GH"  || echo "[WARN] filter github 失败"
 $PY scripts/filter.py --date "$DATE" --section summary   --file "$RAW_SU"  || echo "[WARN] filter summary 失败"
 
-# 3) 构建静态归档 / 首页 / 历史页
-echo "[3/7] build ..."
-$PY scripts/build.py || echo "[WARN] build 失败"
+# 顺序说明：build.py 会扫描 output/poster 与 output/summary，把 poster / summaryHtml 路径
+# 写回 feed.json 资产索引，因此它必须排在「速览页」与「海报」之后；否则当日
+# feed.poster / feed.summaryHtml 为空，validate_dates 会判为「未注册索引」错配。
 
-# 4) 构建速览页
-echo "[4/7] build_summary ..."
+# 3) 构建速览页
+echo "[3/7] build_summary ..."
 $PY scripts/build_summary.py || echo "[WARN] build_summary 失败"
 
-# 5) 生成海报
-echo "[5/7] poster ..."
+# 4) 生成海报
+echo "[4/7] poster ..."
 $PY scripts/poster.py --date "$DATE" || echo "[WARN] poster 失败"
+
+# 5) 构建静态归档 / 首页 / 历史页（并把 poster / summaryHtml 写回 feed 资产索引）
+echo "[5/7] build ..."
+$PY scripts/build.py || echo "[WARN] build 失败"
 
 # 6) 一致性 / 日期校验（失败仅记录，不阻断发布）
 echo "[6/7] regression_check + validate_dates ..."

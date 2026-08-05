@@ -1,9 +1,20 @@
 # 运行时配置：集中管理所有外部依赖端点与模式开关。
 # 切换「联网 / 离线」只需改 mode；无需改动任何脚本源码。
 # 说明：本文件被 collect.py / poster.py / run_daily.sh 读取。
-mode: offline            # offline | online
+#
+# online  = 实时联网采集最新数据（默认）。单源失败自动重试，
+#           整体失败才回退最近一次成功缓存，不会用空结果覆盖历史。
+# offline = 完全不碰外网，仅读 data/collected/ 缓存与 sources/corpus/ 语料。
+# 临时切换无需改本文件：AINEWS_MODE=offline python3 scripts/collect.py --date ...
+mode: online             # offline | online
 
 collect:
+  # HTTP 抓取参数（collect.py 读取；留空则用脚本内置默认值）
+  http:
+    timeout: 25          # 单次请求超时（秒）
+    retries: 3           # 单源最大尝试次数（线性退避）
+    workers: 8           # 并发抓取线程数，整体耗时≈最慢单源
+    backoff: 1.5         # 重试退避基数（秒）
   rss:
     enabled: true
     sources: sources/rss.yaml
@@ -19,9 +30,30 @@ collect:
 
 generate:
   # 内容边界：生成阶段是否允许联网搜索补充事实。
-  # offline 模式下必须为 false：仅用本地缓存 + 语料，禁止凭空编造新事实。
-  allow_web_search: false
+  # online 模式下为 true：可用实时抓取结果撰写，仍禁止编造未出现在素材中的事实。
+  allow_web_search: true
   corpus_dir: sources/corpus
+  # 无人值守生成（scripts/generate.py 读取）。
+  # 仅用于没有对话模型的环境（如 GitHub Actions）；本地 WorkBuddy 自动化不走这里。
+  # API key 永远只从环境变量读取，绝不写入本文件。
+  # 素材分层配额：ArXiv 等预印本源条目基数极大（常占抓取总量八成以上），
+  # 不分层会把 TechCrunch / 量子位 等产业新闻挤出候选，导致选题跑偏成论文速递。
+  digest:
+    industry_limit: 90     # 产业动态给模型看的上限
+    academic_limit: 25     # 学术预印本上限
+    academic_sources:      # 命中这些关键词的来源归为学术层（大小写不敏感）
+      - arxiv
+      - paper
+      - 预印本
+  llm:
+    provider: deepseek
+    base_url: "https://api.deepseek.com/chat/completions"
+    model: deepseek-chat
+    api_key_env: DEEPSEEK_API_KEY
+    temperature: 0.6
+    max_tokens: 8000
+    timeout: 300
+    retries: 3
 
 git:
   enabled: true

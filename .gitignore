@@ -1,3 +1,14 @@
-.workbuddy/
+# 数据缓存（云端每次联网实时采集，不提交）
+data/collected/
+
+# 运行日志（本地调试用）
+data/logs/
+
+# Python 缓存
 __pycache__/
 *.pyc
+*.pyo
+
+# IDE 与系统文件
+.DS_Store
+.workbuddy/

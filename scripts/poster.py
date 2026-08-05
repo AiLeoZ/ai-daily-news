@@ -18,6 +18,7 @@ poster.py —— 由每日 feed.json 生成一张可直接发社交媒体的竖�
 """
 
 import argparse
+import glob
 import json
 import os
 import re
@@ -62,21 +63,46 @@ AI_DEEP = (37, 99, 235)
 GH_C = (251, 176, 64)             # GitHub 橙
 GH_DEEP = (217, 119, 6)
 
-FONT_CANDIDATES = [
-    ("/System/Library/Fonts/Hiragino Sans GB.ttc", 0, 1),   # 常规, 粗体
-    ("/System/Library/Fonts/STHeiti Light.ttc", 0, 0),
-    ("/System/Library/Fonts/Supplemental/Songti.ttc", 0, 1),
-]
+# 跨平台中文字体解析（macOS / Linux / 仓库内置，任一可用即停，不抛异常）
+def _resolve_font():
+    repo_fonts = sorted(glob.glob(os.path.join(ROOT, "assets", "fonts", "*.[to]tf")))
+    repo_fonts += sorted(glob.glob(os.path.join(ROOT, "assets", "fonts", "*.ttc")))
+    for path in repo_fonts:
+        yield (path, 0, 0, True)
+
+    if sys.platform == "darwin":
+        for path in [
+            "/System/Library/Fonts/Hiragino Sans GB.ttc",
+            "/System/Library/Fonts/PingFang.ttc",
+            "/System/Library/Fonts/STHeiti Light.ttc",
+        ]:
+            yield (path, 0, 1, False)
+    else:
+        for path in [
+            "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+        ]:
+            yield (path, 0, 0, False)
+        for path in sorted(glob.glob("/usr/share/fonts/**/*.[to]tf", recursive=True)):
+            yield (path, 0, 0, False)
 
 
-def load_fonts():
-    for path, ri, bi in FONT_CANDIDATES:
-        if os.path.exists(path):
+def _pick_font():
+    for path, ri, bi, _ in _resolve_font():
+        if not os.path.exists(path):
+            continue
+        try:
+            ImageFont.truetype(path, 20, index=ri)
+            print(f"[poster] 使用字体: {path}", file=sys.stderr)
             return path, ri, path, bi
-    raise RuntimeError("未找到可用的中文字体")
+        except Exception:
+            continue
+    print("[poster] 未找到可用的中文字体，海报文字可能显示异常", file=sys.stderr)
+    return None, 0, None, 0
 
 
-FR_PATH, FR_IDX, FB_PATH, FB_IDX = load_fonts()
+FR_PATH, FR_IDX, FB_PATH, FB_IDX = _pick_font()
 _font_cache = {}
 
 
@@ -84,10 +110,16 @@ def f(size, bold=False):
     key = (size, bold)
     if key not in _font_cache:
         path, idx = (FB_PATH, FB_IDX) if bold else (FR_PATH, FR_IDX)
-        try:
-            _font_cache[key] = ImageFont.truetype(path, size, index=idx)
-        except Exception:
-            _font_cache[key] = ImageFont.truetype(path, size)
+        if path is None:
+            _font_cache[key] = ImageFont.load_default()
+        else:
+            try:
+                _font_cache[key] = ImageFont.truetype(path, size, index=idx)
+            except Exception:
+                try:
+                    _font_cache[key] = ImageFont.truetype(path, size)
+                except Exception:
+                    _font_cache[key] = ImageFont.load_default()
     return _font_cache[key]
 
 

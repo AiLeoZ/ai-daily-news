@@ -1,0 +1,86 @@
+================ run_daily.sh @ 2026-08-04 (2026-08-04 18:54:32) ================
+mode=offline
+[1/7] collect (offline) ...
+[offline] 离线采集：仅使用本地缓存（data/collected/）与语料（sources/corpus/）
+RSS: 305 条（errors=0） 来源=['rss_2026-08-04.json']
+GitHub: daily=10 weekly=10（errors=0） 来源=['gh_2026-08-04.json']
+[2/7] filter (aiNews / github / summary) ...
+  已聚合 2026-08-04/aiNews（条目 10）
+  已聚合 2026-08-04/github（条目 21）
+  已聚合 2026-08-04/summary（条目 0）
+[3/7] build ...
+已写回 feed.json 资产索引（poster / summaryHtml）
+已生成 3 个每日归档页 → output/archive/
+已生成 output/history.html
+已生成 output/index.html（最新：2026-08-04）
+构建完成。
+[4/7] build_summary ...
+已生成 3 个速览模式页 → output/summary/，最新：2026-08-04
+[5/7] poster ...
+[poster] 日期 2026-08-04 | AI 10 条 | GitHub 3 条
+   AI 1. DeepSeek 开放 Harness 智能体框架内测，V4 Fla
+   AI 2. 白宫闭门约谈四大 AI 巨头，前沿模型「发布前 30 天交政府测试」
+   AI 3. OpenAI 降价 80% 引爆 A 股 AI 应用与算力行情，To
+   AI 4. Palantir 二季度营收增 93%，美国商业收入暴涨 149%，
+   AI 5. MiniMax H3 全模态视频模型正式开源，视频编辑能力登顶全球第
+   AI 6. 阿里发布 Qwen3.8-Max：2.4 万亿参数，下周首次开源 M
+   AI 7. Hugging Face CEO：中国开源模型最快年底与美国头部齐平
+   AI 8. OpenAI 下一代模型 Astra 攻克十项数学难题，推理成本约 
+   AI 9. 慕尼黑法院裁定 Suno 双重侵权，AI 音乐版权第一案落槌（8月1
+   AI 10. 谷歌 DeepMind 发布 Gemini Robotics 2：人
+   GH 1. lyogavin/airllm                            +1,085
+   GH 2. zhaoxuya520/reverse-skill                  +2,446
+   GH 3. firecrawl/pdf-inspector                    +1,699
+[poster] 输出 /Users/zhulei/Workbuddy/2026-08-03-11-34-41/output/poster/2026-08-04.png  (1080x2538)
+[poster] 同步 /Users/zhulei/Workbuddy/2026-08-03-11-34-41/output/poster/latest.png
+[6/7] regression_check + validate_dates ...
+# check data/raw/2026-08-04_ai.md  section=aiNews
+────────────────────────────────────────────────────────
+  [✓] aiNews-h2-1: 含二级标题「🔝 今日要闻」
+  [✓] aiNews-h2-2: 含二级标题「近期其他要闻」
+  [✓] aiNews-count: 条目数在 [8,10]（实际 10）
+  [✓] aiNews-marker-为什么关注: 正文含「为什么关注」（出现 10 次）
+  [✓] aiNews-marker-注解: 正文含「注解」（出现 10 次）
+  [✓] aiNews-forbid-通俗解释: 不含禁语「通俗解释」
+  [✓] aiNews-order: 日期严格时间倒序（越近越靠前）
+────────────────────────────────────────────────────────
+  通过 7/7
+SELF_CHECK: {"aiNews-h2-1": true, "aiNews-h2-2": true, "aiNews-count": true, "aiNews-marker-为什么关注": true, "aiNews-marker-注解": true, "aiNews-forbid-通俗解释": true, "aiNews-order": true}
+# check data/raw/2026-08-04_github.md  section=github
+────────────────────────────────────────────────────────
+  [✓] github-h2-1: 含二级标题「一、今日榜」
+  [✓] github-h2-2: 含二级标题「二、本周榜」
+  [✓] github-forbid-h2-since=: 二级标题不含「since=」
+  [✓] github-daily-cols: daily榜表头列匹配 ['排名', '项目', '今日新增 Star', '注解']
+  [✓] github-daily-rows: daily榜行数在 [10,10]（实际 10）
+  [✓] github-daily-repodesc: daily榜每行项目格含「repo-desc」
+  [✓] github-weekly-cols: weekly榜表头列匹配 ['排名', '项目', '总 Star', '本周新增', '注解']
+  [✓] github-weekly-rows: weekly榜行数在 [10,10]（实际 10）
+  [✓] github-weekly-repodesc: weekly榜每行项目格含「repo-desc」
+────────────────────────────────────────────────────────
+  通过 9/9
+SELF_CHECK: {"github-h2-1": true, "github-h2-2": true, "github-forbid-h2-since=": true, "github-daily-cols": true, "github-daily-rows": true, "github-daily-repodesc": true, "github-weekly-cols": true, "github-weekly-rows": true, "github-weekly-repodesc": true}
+# check data/raw/2026-08-04_summary.md  section=summary
+────────────────────────────────────────────────────────
+  [✓] summary-h2-1: 含二级标题「摘要」
+  [✓] summary-h2-2: 含二级标题「关键要点」
+  [✓] summary-forbid-通俗解释: 不含禁语「通俗解释」
+────────────────────────────────────────────────────────
+  通过 3/3
+SELF_CHECK: {"summary-h2-1": true, "summary-h2-2": true, "summary-forbid-通俗解释": true}
+[2026-08-04] 速览页存在 ✓
+[2026-08-04] 速览页内嵌日期与文件名、日期键一致 ✓
+[2026-08-04] 海报存在且文件名日期匹配 ✓
+[2026-08-03] 速览页存在 ✓
+[2026-08-03] 速览页内嵌日期与文件名、日期键一致 ✓
+[2026-08-03] 海报存在且文件名日期匹配 ✓
+[2026-08-02] 速览页存在 ✓
+[2026-08-02] 速览页内嵌日期与文件名、日期键一致 ✓
+[2026-08-02] 海报存在且文件名日期匹配 ✓
+
+✓ 日期校验通过：9 项检查全部一致，无错配/串用。
+[7/7] publish (git push best-effort) ...
+[WARN] git push 失败（离线或权限不足，已跳过，不阻塞）
+================ 完成 @ 2026-08-04 ================
+产物：data/feed.json · output/archive/2026-08-04.html · output/summary/2026-08-04.html · output/poster/2026-08-04.png
+部署（CloudStudio）由自动化/手动执行 best-effort；日志见 /Users/zhulei/WorkBuddy/2026-08-03-11-34-41/data/logs/run_2026-08-04.log

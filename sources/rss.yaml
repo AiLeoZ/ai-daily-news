@@ -1,14 +1,33 @@
 # 资讯源定义 —— RSS 订阅源
 # 每行格式： 名称 || RSS地址 || 分类
-# collect.py 会拉取这些源，提取近 7 天条目作为 AI 新闻的候选素材。
+# collect.py 会并发拉取这些源，提取近 7 天条目作为 AI 新闻的候选素材。
 # 分类（category）仅用于标注，不参与筛选逻辑。
+#
+# 维护约定：新增/替换源前先跑 `python3 scripts/collect.py --health` 体检，
+# 确认返回的是 RSS/Atom（而非 HTML）且窗口内有条目，再写入本文件。
+# 最近一次体检：2026-08-05。
 
 feeds:
-  - "ArXiv cs.AI || https://arxiv.org/rss/cs.AI || research"
-  - "The Verge AI || https://www.theverge.com/rss/ai-artificial-intelligence/index.xml || news"
-  - "TechCrunch AI || https://techcrunch.com/category/artificial-intelligence/feed/ || news"
-  - "MIT Tech Review AI || https://www.technologyreview.com/topic/artificial-intelligence/feed || news"
-  - "Google Research Blog || https://research.google/blog/rss/ || research"
-  - "Hugging Face Blog || https://huggingface.co/blog/feed.xml || research"
-  - "机器之心 || https://www.jiqizhixin.com/rss || news"
+  # —— 产业与media（中文） ——
   - "量子位 || https://www.qbitai.com/feed || news"
+  - "36氪 || https://36kr.com/feed || news"
+  - "InfoQ 中国 || https://www.infoq.cn/feed || news"
+
+  # —— 产业与media（英文） ——
+  - "TechCrunch AI || https://techcrunch.com/category/artificial-intelligence/feed/ || news"
+  - "The Verge AI || https://www.theverge.com/rss/ai-artificial-intelligence/index.xml || news"
+  - "MIT Tech Review AI || https://www.technologyreview.com/topic/artificial-intelligence/feed || news"
+
+  # —— 厂商官方 ——
+  - "OpenAI News || https://openai.com/news/rss.xml || vendor"
+  - "Google AI Blog || https://blog.google/technology/ai/rss/ || vendor"
+  - "Google DeepMind || https://deepmind.google/blog/rss.xml || vendor"
+
+  # —— 学术预印本 ——
+  - "ArXiv cs.AI || https://arxiv.org/rss/cs.AI || research"
+
+# 已下线的源（保留记录，避免被再次误加回来）：
+#   机器之心 https://www.jiqizhixin.com/rss        → 返回 HTML 而非 RSS，订阅端点已废弃
+#   Hugging Face https://huggingface.co/blog/feed.xml → 连接被拒绝（网络不可达）
+#   Google Research https://research.google/blog/rss/ → 持续超时，已由 blog.google AI 频道替代
+#   VentureBeat AI https://venturebeat.com/category/ai/feed/ → 最新条目停留在 2026-05，内容陈旧
