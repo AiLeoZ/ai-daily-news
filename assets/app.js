@@ -52,8 +52,19 @@ function clearDateWarning() {
 
 function renderMarkdown(md) {
   if (!md || !md.trim()) return '<p class="loading">今日尚未更新</p>';
-  const html = marked.parse(md);
-  return DOMPurify.sanitize(html);
+  try {
+    if (typeof marked === "undefined" || !marked.parse) {
+      // marked 未加载时的安全降级：原文转义展示，绝不白屏
+      const esc = (md || "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+      return '<pre class="md-fallback">' + esc + "</pre>";
+    }
+    const html = marked.parse(md);
+    if (typeof DOMPurify !== "undefined") return DOMPurify.sanitize(html);
+    return html;
+  } catch (e) {
+    const esc = (md || "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    return '<pre class="md-fallback">' + esc + "</pre>";
+  }
 }
 
 // ----------------------------------------------------------------
@@ -142,12 +153,17 @@ function renderBoard(chunk, kind) {
 
 function renderGithub(md) {
   if (!md || !md.trim()) return '<p class="loading">今日尚未更新</p>';
-  const idxWeek = md.search(/^##\s*二、/m);
-  const todayChunk = idxWeek >= 0 ? md.slice(0, idxWeek) : md;
-  const weekChunk = idxWeek >= 0 ? md.slice(idxWeek) : "";
-  let html = renderBoard(todayChunk, "今日榜");
-  if (weekChunk.trim()) html += renderBoard(weekChunk, "本周榜");
-  return html;
+  try {
+    const idxWeek = md.search(/^##\s*二、/m);
+    const todayChunk = idxWeek >= 0 ? md.slice(0, idxWeek) : md;
+    const weekChunk = idxWeek >= 0 ? md.slice(idxWeek) : "";
+    let html = renderBoard(todayChunk, "今日榜");
+    if (weekChunk.trim()) html += renderBoard(weekChunk, "本周榜");
+    return html;
+  } catch (e) {
+    // 榜单解析异常时降级为普通 Markdown 渲染，绝不白屏
+    return renderMarkdown(md);
+  }
 }
 
 function bindGithubToggles() {
