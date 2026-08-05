@@ -3,14 +3,6 @@
   "count": 498,
   "items": [
     {
-      "source": "OpenAI News",
-      "title": "Third-party cyber evaluations involving OpenAI models",
-      "link": "https://openai.com/index/third-party-cyber-evaluations-involving-openai-models",
-      "published": "Tue, 04 Aug 2026 19:00:00 GMT",
-      "published_iso": "2026-08-05",
-      "summary": "OpenAI explains recent third-party cybersecurity evaluation incidents and outlines new safeguards to strengthen AI model testing and evaluation."
-    },
-    {
       "source": "TechCrunch AI",
       "title": "SpaceX has bought $329M worth of Tesla Megapacks so far this year",
       "link": "https://techcrunch.com/2026/08/04/spacex-has-bought-329m-worth-of-tesla-megapacks-so-far-this-year/",
@@ -49,6 +41,14 @@
       "published": "Tue, 04 Aug 2026 19:28:49 +0000",
       "published_iso": "2026-08-05",
       "summary": "The week-old Open Secure AI Alliance, spearheaded by Nvidia and grown to over 120 companies, already has proposals out for defending against AI agents."
+    },
+    {
+      "source": "OpenAI News",
+      "title": "Third-party cyber evaluations involving OpenAI models",
+      "link": "https://openai.com/index/third-party-cyber-evaluations-involving-openai-models",
+      "published": "Tue, 04 Aug 2026 19:00:00 GMT",
+      "published_iso": "2026-08-05",
+      "summary": "OpenAI explains recent third-party cybersecurity evaluation incidents and outlines new safeguards to strengthen AI model testing and evaluation."
     },
     {
       "source": "The Verge AI",
@@ -3412,6 +3412,14 @@
     },
     {
       "source": "InfoQ 中国",
+      "title": "开出AI界最高薪的Anthropic，抱怨员工为钱而来？全网“阴阳”：和你死活反开源一样",
+      "link": "https://www.infoq.cn/article/qYp5NCloR64emA3Bq11F?utm_source=rss&utm_medium=article",
+      "published": "Wed, 05 Aug 2026 15:25:00 GMT",
+      "published_iso": "2026-08-05",
+      "summary": "点击查看原文>"
+    },
+    {
+      "source": "InfoQ 中国",
       "title": "谷歌连发三模型，把机器人调教成“全能打工人”！几小时速配、从头控到脚，还能“组团”开干",
       "link": "https://www.infoq.cn/article/Zx9Z9etgapBsdOL9FtW1?utm_source=rss&utm_medium=article",
       "published": "Wed, 05 Aug 2026 15:19:35 GMT",
@@ -3579,30 +3587,6 @@
       "summary": "二季度AI收入暴涨247%"
     },
     {
-      "source": "MIT Tech Review AI",
-      "title": "Trump’s AI protectionism has come for robotics",
-      "link": "https://www.technologyreview.com/2026/08/03/1141056/trumps-ai-protectionism-has-come-for-robotics/",
-      "published": "Mon, 03 Aug 2026 18:43:30 +0000",
-      "published_iso": "2026-08-04",
-      "summary": "This story originally appeared in The Algorithm, our weekly newsletter on AI. To get stories like this in your inbox first,&#160;sign up here. Humanoid robots usually elicit more cringe than awe: They stumble, kick children, and despite advances are still worse at using their hands than my toddler. It’s a nascent industry, and such robots&#8230;"
-    },
-    {
-      "source": "OpenAI News",
-      "title": "New ways to learn and teach with ChatGPT Work and Codex",
-      "link": "https://openai.com/index/learn-teach-chatgpt-work-codex",
-      "published": "Tue, 04 Aug 2026 00:00:00 GMT",
-      "published_iso": "2026-08-04",
-      "summary": "Explore new education plugins for ChatGPT Work and Codex that help K–12 teachers, college educators, and students learn, teach, research, and build."
-    },
-    {
-      "source": "OpenAI News",
-      "title": "Apple is getting this wrong",
-      "link": "https://openai.com/index/apple-is-getting-this-wrong",
-      "published": "Mon, 03 Aug 2026 22:00:00 GMT",
-      "published_iso": "2026-08-04",
-      "summary": "OpenAI addresses Apple’s baseless lawsuit, corrects claims about its employees, and shares messages documenting what happened."
-    },
-    {
       "source": "TechCrunch AI",
       "title": "Spotify expands AI remix and covers project with Merlin partnership",
       "link": "https://techcrunch.com/2026/08/04/spotify-adds-merlin-to-its-ai-music-remix-and-covers-effort/",
@@ -3699,6 +3683,30 @@
       "summary": "House spending records show OpenAI's ChatGPT dominates paid AI use on Capitol Hill, with congressional offices relying on the chatbot to draft memos, summarize legislation, and assist constituent communications."
     },
     {
+      "source": "MIT Tech Review AI",
+      "title": "Trump’s AI protectionism has come for robotics",
+      "link": "https://www.technologyreview.com/2026/08/03/1141056/trumps-ai-protectionism-has-come-for-robotics/",
+      "published": "Mon, 03 Aug 2026 18:43:30 +0000",
+      "published_iso": "2026-08-04",
+      "summary": "This story originally appeared in The Algorithm, our weekly newsletter on AI. To get stories like this in your inbox first,&#160;sign up here. Humanoid robots usually elicit more cringe than awe: They stumble, kick children, and despite advances are still worse at using their hands than my toddler. It’s a nascent industry, and such robots&#8230;"
+    },
+    {
+      "source": "OpenAI News",
+      "title": "New ways to learn and teach with ChatGPT Work and Codex",
+      "link": "https://openai.com/index/learn-teach-chatgpt-work-codex",
+      "published": "Tue, 04 Aug 2026 00:00:00 GMT",
+      "published_iso": "2026-08-04",
+      "summary": "Explore new education plugins for ChatGPT Work and Codex that help K–12 teachers, college educators, and students learn, teach, research, and build."
+    },
+    {
+      "source": "OpenAI News",
+      "title": "Apple is getting this wrong",
+      "link": "https://openai.com/index/apple-is-getting-this-wrong",
+      "published": "Mon, 03 Aug 2026 22:00:00 GMT",
+      "published_iso": "2026-08-04",
+      "summary": "OpenAI addresses Apple’s baseless lawsuit, corrects claims about its employees, and shares messages documenting what happened."
+    },
+    {
       "source": "The Verge AI",
       "title": "Texas says data centers must pass an audit before connecting to the grid",
       "link": "https://www.theverge.com/policy/975071/texas-data-center-audit",
@@ -3743,14 +3751,6 @@
       "title": "Agent 记忆，不能只靠聊天记录",
       "link": "https://www.infoq.cn/article/qm3RHL133SESFZJGrmeA?utm_source=rss&utm_medium=article",
       "published": "Tue, 04 Aug 2026 14:37:52 GMT",
-      "published_iso": "2026-08-04",
-      "summary": "点击查看原文>"
-    },
-    {
-      "source": "InfoQ 中国",
-      "title": "以 AI 为辅助的安全研究人员发现，攻击者可以利用经过特殊构造的视频获取用户电脑的访问权限",
-      "link": "https://www.infoq.cn/article/Mar3v7yyH4PjYFKLUZUh?utm_source=rss&utm_medium=article",
-      "published": "Tue, 04 Aug 2026 14:15:00 GMT",
       "published_iso": "2026-08-04",
       "summary": "点击查看原文>"
     },
@@ -3811,6 +3811,22 @@
       "summary": ""
     },
     {
+      "source": "TechCrunch AI",
+      "title": "A Marc Benioff-backed startup thinks AI can solve the AI deployment problem",
+      "link": "https://techcrunch.com/2026/08/03/a-marc-benioff-backed-startup-thinks-ai-can-solve-the-ai-deployment-problem/",
+      "published": "Mon, 03 Aug 2026 10:00:00 +0000",
+      "published_iso": "2026-08-03",
+      "summary": "June emerged from stealth today with a $20 million pre-seed round to make AI adoption simpler."
+    },
+    {
+      "source": "TechCrunch AI",
+      "title": "Sam Altman and AI’s decel debate",
+      "link": "https://techcrunch.com/2026/08/02/sam-altman-and-ais-decel-debate/",
+      "published": "Sun, 02 Aug 2026 20:54:22 +0000",
+      "published_iso": "2026-08-03",
+      "summary": "On the latest episode of Equity, we discuss why Sam Altman is calling on the industry to \"pace the rate of AI development.\""
+    },
+    {
       "source": "MIT Tech Review AI",
       "title": "Here’s why AI agents lie and cheat to reach their goals",
       "link": "https://www.technologyreview.com/2026/08/03/1141009/heres-why-ai-agents-lie-and-cheat-to-reach-their-goals/",
@@ -3833,22 +3849,6 @@
       "published": "Mon, 03 Aug 2026 00:00:00 GMT",
       "published_iso": "2026-08-03",
       "summary": "Circles uses the OpenAI API and Codex to power AI-native telco experiences, increasing ARPU by 22%, reducing churn by 9%, and improving development efficiency."
-    },
-    {
-      "source": "TechCrunch AI",
-      "title": "A Marc Benioff-backed startup thinks AI can solve the AI deployment problem",
-      "link": "https://techcrunch.com/2026/08/03/a-marc-benioff-backed-startup-thinks-ai-can-solve-the-ai-deployment-problem/",
-      "published": "Mon, 03 Aug 2026 10:00:00 +0000",
-      "published_iso": "2026-08-03",
-      "summary": "June emerged from stealth today with a $20 million pre-seed round to make AI adoption simpler."
-    },
-    {
-      "source": "TechCrunch AI",
-      "title": "Sam Altman and AI’s decel debate",
-      "link": "https://techcrunch.com/2026/08/02/sam-altman-and-ais-decel-debate/",
-      "published": "Sun, 02 Aug 2026 20:54:22 +0000",
-      "published_iso": "2026-08-03",
-      "summary": "On the latest episode of Equity, we discuss why Sam Altman is calling on the industry to \"pace the rate of AI development.\""
     },
     {
       "source": "The Verge AI",
@@ -3996,9 +3996,9 @@
   ],
   "offline": false,
   "sources_used": [
+    "TechCrunch AI",
     "MIT Tech Review AI",
     "OpenAI News",
-    "TechCrunch AI",
     "The Verge AI",
     "Google AI Blog",
     "Google DeepMind",
@@ -4009,6 +4009,6 @@
   "sources_failed": [
     "36氪"
   ],
-  "today_count": 447,
-  "collected_at": "2026-08-05T15:31:27+08:00"
+  "today_count": 448,
+  "collected_at": "2026-08-05T15:55:46+08:00"
 }
