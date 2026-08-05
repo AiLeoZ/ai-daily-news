@@ -1,0 +1,157 @@
+name: AI 每日资讯 · 云端全自动生成与发布
+
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "指定日期 YYYY-MM-DD（留空 = Asia/Shanghai 当天）"
+        required: false
+        type: string
+      force:
+        description: "已存在当日内容时也强制重新生成"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.cfg.outputs.date }}
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 安装 Python 依赖与中文字体
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk || \
+          sudo apt-get install -y -qq fonts-wqy-zenhei
+          pip install -r requirements.txt
+
+      - name: 确定日期
+        id: cfg
+        run: |
+          if [ -n "${{ inputs.date }}" ]; then
+            DATE="${{ inputs.date }}"
+          else
+            DATE="$(TZ=Asia/Shanghai date +%F)"
+          fi
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          echo "本次目标日期：$DATE"
+
+      - name: 采集素材（联网实时抓取 RSS + GitHub Trending）
+        env:
+          AINEWS_MODE: online
+        run: python scripts/collect.py --date "${{ steps.cfg.outputs.date }}"
+
+      - name: 生成内容（LLM API，写入 data/raw/）
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "::error::未配置 DEEPSEEK_API_KEY，请在仓库 Settings → Secrets 添加"
+            exit 1
+          fi
+          FORCE=""
+          if [ "${{ inputs.force }}" = "true" ]; then FORCE="--force"; fi
+          python scripts/generate.py --date "${{ steps.cfg.outputs.date }}" $FORCE
+
+      - name: 内容门禁 · 回归校验（阻断式，不通过则中止发布）
+        env:
+          DATE: ${{ steps.cfg.outputs.date }}
+        run: |
+          python scripts/regression_check.py check "data/raw/${DATE}_ai.md"      --section aiNews
+          python scripts/regression_check.py check "data/raw/${DATE}_github.md"  --section github
+          python scripts/regression_check.py check "data/raw/${DATE}_summary.md" --section summary
+          echo "内容门禁通过"
+
+      - name: 聚合写入 feed.json
+        env:
+          DATE: ${{ steps.cfg.outputs.date }}
+        run: |
+          python scripts/filter.py --date "$DATE" --section aiNews   --file "data/raw/${DATE}_ai.md"
+          python scripts/filter.py --date "$DATE" --section github    --file "data/raw/${DATE}_github.md"
+          python scripts/filter.py --date "$DATE" --section summary   --file "data/raw/${DATE}_summary.md"
+
+      - name: 构建速览页
+        run: python scripts/build_summary.py
+
+      - name: 生成社媒海报
+        run: python scripts/poster.py --date "${{ steps.cfg.outputs.date }}"
+
+      - name: 构建静态站点（归档 + 首页 + 索引回写 feed）
+        run: python scripts/build.py
+
+      - name: 日期一致性校验（阻断式，确认 feed / 海报 / 速览三者严格 1:1）
+        run: python scripts/validate_dates.py
+
+      - name: 确认全部产物齐备
+        env:
+          DATE: ${{ steps.cfg.outputs.date }}
+        run: |
+          MISSING=0
+          for f in \
+            "data/raw/${DATE}_ai.md" \
+            "data/raw/${DATE}_github.md" \
+            "data/raw/${DATE}_summary.md" \
+            "data/feed.json" \
+            "output/archive/${DATE}.html" \
+            "output/summary/${DATE}.html" \
+            "output/poster/${DATE}.png" \
+            "output/poster/latest.png"; do
+            if [ ! -s "$f" ]; then echo "::error::缺失或为空：$f"; MISSING=1; fi
+          done
+          [ "$MISSING" = "0" ] || exit 1
+          echo "全部产物齐备"
+
+      - name: 提交并推送
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "无变更，跳过提交"
+          else
+            git commit -m "daily: ${{ steps.cfg.outputs.date }}"
+            git push origin HEAD:main
+          fi
+
+      - name: 打包站点制品
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - name: 发布到 GitHub Pages
+        id: pages
+        uses: actions/deploy-pages@v4
+
+      - name: 输出结果
+        env:
+          DATE: ${{ needs.update.outputs.date }}
+        run: |
+          echo "更新日期：$DATE"
+          echo "站点地址：${{ steps.pages.outputs.page_url }}"
+          echo "当日海报：output/poster/${DATE}.png"
+          echo "当日速览：output/summary/${DATE}.html"
