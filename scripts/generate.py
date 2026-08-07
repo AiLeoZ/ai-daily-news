@@ -490,6 +490,20 @@ def normalize_ai_order(md, date):
     return out
 
 
+def ensure_heading_spacing(md):
+    # 格式兜底: 确保 ### 标题前有空行(修复LLM行内嵌入 & 行间缺空行)
+    # 1) 行内嵌入: 非换行后紧跟 ### 标题 -> 拆出补空行
+    md = __import__("re").sub(r"([^\n])(###\s+\d+\.)\s*", r"\1\n\n\n\2 ", md)
+    # 2) 行间缺空行: ### 前行非空 -> 补空行
+    lines = md.splitlines(keepends=True)
+    out = []
+    for ln in lines:
+        if ln.strip().startswith("### ") and out and out[-1].strip() != "":
+            out.append("\n")
+        out.append(ln)
+    return "".join(out)
+
+
 # --------------------------------------------------------------------------
 # 自检
 # --------------------------------------------------------------------------
@@ -579,6 +593,7 @@ def generate_section(section, date, cfg, api_key, guide, dry_run=False):
         if norm != md:
             print("  [排序兜底] 已按标题日期倒序重排 AI 新闻条目")
             md = norm
+    md = ensure_heading_spacing(md)
 
     os.makedirs(RAW, exist_ok=True)
     out = os.path.join(RAW, SECTION_FILES[section].format(date=date))
