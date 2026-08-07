@@ -68,6 +68,10 @@ $PY scripts/poster.py --date "$DATE" || echo "[WARN] poster 失败"
 echo "[5/7] build ..."
 $PY scripts/build.py || echo "[WARN] build 失败"
 
+# 5.5) 历史记录过期清理（仅保留最近 7 天，分批静默删除）
+echo "[5.5/7] prune_history ..."
+$PY scripts/prune_history.py --keep 7 || echo "[WARN] prune_history 失败"
+
 # 6) 一致性 / 日期校验（失败仅记录，不阻断发布）
 echo "[6/7] regression_check + validate_dates ..."
 $PY scripts/regression_check.py check "$RAW_AI"  --section aiNews  || echo "[FAIL] aiNews 一致性"

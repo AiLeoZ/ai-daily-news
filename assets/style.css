@@ -227,28 +227,6 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
 }
-.history-select {
-  border: 1px solid var(--line); background: #fff; color: var(--ink);
-  padding: 6px 30px 6px 12px; border-radius: 999px; cursor: pointer;
-  font-size: 13px; max-width: 220px;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%236b7686' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  background-repeat: no-repeat; background-position: right 12px center;
-}
-.history-select:hover { border-color: var(--accent); color: var(--accent); }
-.history-ymd {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 12px; flex-wrap: wrap;
-}
-.ymd-label { font-size: 13px; color: var(--muted); }
-.ymd-select {
-  border: 1px solid var(--line); background: #fff; color: var(--ink);
-  padding: 6px 30px 6px 12px; border-radius: 999px; cursor: pointer;
-  font-size: 13px; appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%236b7686' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  background-repeat: no-repeat; background-position: right 12px center;
-}
-.ymd-select:hover { border-color: var(--accent); color: var(--accent); }
 .history-bar {
   display: flex; flex-wrap: wrap; gap: 8px;
 }
@@ -324,9 +302,6 @@ body {
   .history-inner { padding: 14px; border-radius: 12px; }
   .history-head { margin-bottom: 10px; }
   .history h3 { font-size: 14px; }
-  .history-select, .ymd-select { font-size: 12px; padding: 5px 24px 5px 10px; }
-  .ymd-label { font-size: 12px; width: 100%; margin-bottom: 4px; }
-  .history-ymd { gap: 6px; margin-bottom: 10px; }
   .date-chip { font-size: 12px; padding: 5px 11px; }
   .repo-desc { font-size: 11.5px; }
   .site-footer { font-size: 12px; padding: 6px 14px 24px; }

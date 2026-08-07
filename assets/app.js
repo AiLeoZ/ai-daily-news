@@ -3,11 +3,15 @@
 
 const DATA_URL = "data/feed.json";
 
+// 历史记录保留窗口：仅展示/保留最近 KEEP_DAYS 天
+const KEEP_DAYS = 7;
+// 过期清理分批大小（避免一次性删除大量数据阻塞主线程）
+const PRUNE_BATCH = 20;
+
 const state = {
   entries: {},
   dates: [],
   current: null,
-  dateTree: {},
 };
 
 function fmtDate(d) {
@@ -22,6 +26,44 @@ function fmtTime(iso) {
   if (isNaN(t)) return "";
   const pad = (n) => String(n).padStart(2, "0");
   return `更新于 ${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())} ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+}
+
+// ----------------------------------------------------------------
+// 历史记录过期清理（读取时触发，静默后台执行）
+// 以最新日期为基准，仅保留最近 KEEP_DAYS 天：
+//   1) 数组同步裁剪（轻量，立即生效，保证 UI 只渲染窗口内日期）；
+//   2) 数据对象分批释放（PRUNE_BATCH 个一组，setTimeout 让出主线程，不阻塞交互）。
+function pruneExpiredDates() {
+  const latest = state.dates[0];
+  if (!latest) return;
+  const keepFrom = new Date(latest + "T00:00:00");
+  keepFrom.setDate(keepFrom.getDate() - (KEEP_DAYS - 1));
+  const y = keepFrom.getFullYear();
+  const m = String(keepFrom.getMonth() + 1).padStart(2, "0");
+  const d = String(keepFrom.getDate()).padStart(2, "0");
+  const keepFromStr = `${y}-${m}-${d}`; // YYYY-MM-DD 字符串可直接比较
+
+  const expired = state.dates.filter((dt) => dt < keepFromStr);
+  if (!expired.length) return;
+
+  // 1) 同步裁剪日期数组（量小，不阻塞）
+  state.dates = state.dates.filter((dt) => dt >= keepFromStr);
+  if (state.current && expired.indexOf(state.current) !== -1) {
+    state.current = state.dates[0];
+  }
+
+  // 2) 分批释放过期数据对象（静默后台执行）
+  let i = 0;
+  (function nextBatch() {
+    const slice = expired.slice(i, i + PRUNE_BATCH);
+    slice.forEach((x) => {
+      delete state.entries[x];
+    });
+    i += PRUNE_BATCH;
+    if (i < expired.length) {
+      setTimeout(nextBatch, 0);
+    }
+  })();
 }
 
 // ----------------------------------------------------------------
@@ -240,32 +282,21 @@ function render() {
     }
   }
 
-  // 高亮当前日期 + 同步下拉选择
+  // 高亮当前日期
   document.querySelectorAll(".date-chip").forEach((chip) => {
     chip.classList.toggle("active", chip.dataset.date === date);
   });
-  const sel = document.getElementById("history-select");
-  if (sel) sel.value = date;
-
-  setYmdFromCurrent();
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function renderHistory() {
   const bar = document.getElementById("history-bar");
-  const sel = document.getElementById("history-select");
   bar.innerHTML = "";
-  sel.innerHTML = "";
 
-  state.dates.forEach((d, i) => {
-    // 下拉选项（日期多时也方便快速跳转）
-    const opt = document.createElement("option");
-    opt.value = d;
-    opt.textContent = (i === 0 ? "最新 · " : "") + fmtDate(d);
-    sel.appendChild(opt);
-
-    // 可点击的日期胶囊
+  // 仅渲染最近 KEEP_DAYS 个日期的直达按钮（数量由 pruneExpiredDates 保证，
+  // 这里再兜底截断，避免渲染窗口外日期）
+  state.dates.slice(0, KEEP_DAYS).forEach((d) => {
     const chip = document.createElement("button");
     chip.className = "date-chip";
     chip.dataset.date = d;
@@ -279,97 +310,7 @@ function renderHistory() {
 }
 
 // —— 按 年/月/日 精确选择历史（数据变多时仍可快速定位）——
-function buildDateTree(dates) {
-  const map = {};
-  dates.forEach((d) => {
-    const [y, m, day] = d.split("-");
-    (map[y] = map[y] || {});
-    (map[y][m] = map[y][m] || new Set()).add(day);
-  });
-  const out = {};
-  Object.keys(map).sort().reverse().forEach((y) => {
-    out[y] = {};
-    Object.keys(map[y]).sort().reverse().forEach((m) => {
-      out[y][m] = Array.from(map[y][m]).sort((a, b) => Number(b) - Number(a));
-    });
-  });
-  return out;
-}
-
-// 将 Y/M/D 三个下拉重置为「当前日期」对应的值（不触发跳转）
-function setYmdFromCurrent() {
-  const [y, m, d] = (state.current || "").split("-");
-  const ySel = document.getElementById("ymd-year");
-  const mSel = document.getElementById("ymd-month");
-  const dSel = document.getElementById("ymd-day");
-  if (!ySel || !y) return;
-  ySel.value = y;
-  mSel.innerHTML = '<option value="">月</option>';
-  if (state.dateTree[y]) {
-    Object.keys(state.dateTree[y]).forEach((mo) => {
-      const o = document.createElement("option");
-      o.value = mo;
-      o.textContent = Number(mo) + "月";
-      mSel.appendChild(o);
-    });
-  }
-  if (m) mSel.value = m;
-  dSel.innerHTML = '<option value="">日</option>';
-  if (state.dateTree[y] && state.dateTree[y][m]) {
-    state.dateTree[y][m].forEach((dd) => {
-      const o = document.createElement("option");
-      o.value = dd;
-      o.textContent = Number(dd) + "日";
-      dSel.appendChild(o);
-    });
-  }
-  if (d) dSel.value = d;
-}
-
-function ymdOnYearChange() {
-  const y = document.getElementById("ymd-year").value;
-  const mSel = document.getElementById("ymd-month");
-  mSel.innerHTML = '<option value="">月</option>';
-  if (state.dateTree[y]) {
-    Object.keys(state.dateTree[y]).forEach((mo) => {
-      const o = document.createElement("option");
-      o.value = mo;
-      o.textContent = Number(mo) + "月";
-      mSel.appendChild(o);
-    });
-  }
-  if (mSel.options.length > 1) mSel.selectedIndex = 1;
-  ymdOnMonthChange();
-}
-
-function ymdOnMonthChange() {
-  const y = document.getElementById("ymd-year").value;
-  const m = document.getElementById("ymd-month").value;
-  const dSel = document.getElementById("ymd-day");
-  dSel.innerHTML = '<option value="">日</option>';
-  if (state.dateTree[y] && state.dateTree[y][m]) {
-    state.dateTree[y][m].forEach((d) => {
-      const o = document.createElement("option");
-      o.value = d;
-      o.textContent = Number(d) + "日";
-      dSel.appendChild(o);
-    });
-  }
-  if (dSel.options.length > 1) dSel.selectedIndex = 1;
-  ymdNavigate();
-}
-
-function ymdNavigate() {
-  const y = document.getElementById("ymd-year").value;
-  const m = document.getElementById("ymd-month").value;
-  const d = document.getElementById("ymd-day").value;
-  if (!y || !m || !d) return;
-  const target = `${y}-${m}-${d}`;
-  if (state.entries[target] && target !== state.current) {
-    state.current = target;
-    render();
-  }
-}
+// 已移除：历史记录仅保留最近 7 天，无需年/月/日层级查找与筛选。
 
 async function init() {
   try {
@@ -380,6 +321,9 @@ async function init() {
     state.dates = Object.keys(state.entries).sort().reverse();
     state.current = state.dates[0] || null;
 
+    // 读取时触发过期清理：静默移除超过 7 天的历史记录（分批后台执行）
+    pruneExpiredDates();
+
     if (!state.current) {
       document.getElementById("ai-content").innerHTML = '<p class="loading">暂无数据</p>';
       document.getElementById("gh-content").innerHTML = '<p class="loading">暂无数据</p>';
@@ -387,18 +331,6 @@ async function init() {
     }
 
     renderHistory();
-
-    // 构建年/月/日层级并填充「年」选项
-    state.dateTree = buildDateTree(state.dates);
-    const ySel = document.getElementById("ymd-year");
-    ySel.innerHTML = '<option value="">年</option>';
-    Object.keys(state.dateTree).forEach((y) => {
-      const o = document.createElement("option");
-      o.value = y;
-      o.textContent = y + "年";
-      ySel.appendChild(o);
-    });
-
     render();
   } catch (e) {
     document.getElementById("ai-content").innerHTML =
@@ -412,18 +344,6 @@ document.getElementById("latest-btn").addEventListener("click", () => {
   state.current = state.dates[0];
   render();
 });
-
-document.getElementById("history-select").addEventListener("change", (e) => {
-  state.current = e.target.value;
-  render();
-});
-
-const ymdY = document.getElementById("ymd-year");
-if (ymdY) {
-  ymdY.addEventListener("change", ymdOnYearChange);
-  document.getElementById("ymd-month").addEventListener("change", ymdOnMonthChange);
-  document.getElementById("ymd-day").addEventListener("change", ymdNavigate);
-}
 
 marked.setOptions({ gfm: true, breaks: false });
 init();

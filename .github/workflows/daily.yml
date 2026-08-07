@@ -104,6 +104,9 @@ jobs:
       - name: 构建静态站点（归档 + 首页 + 索引回写 feed）
         run: python scripts/build.py
 
+      - name: 历史记录过期清理（仅保留最近 7 天，分批静默删除）
+        run: python scripts/prune_history.py --keep 7
+
       - name: 日期一致性校验（阻断式，确认 feed / 海报 / 速览三者严格 1:1）
         run: python scripts/validate_dates.py
 
