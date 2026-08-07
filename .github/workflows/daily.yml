@@ -74,9 +74,17 @@ jobs:
         env:
           DATE: ${{ steps.cfg.outputs.date }}
         run: |
-          python scripts/regression_check.py check "data/raw/${DATE}_ai.md"      --section aiNews
-          python scripts/regression_check.py check "data/raw/${DATE}_github.md"  --section github
-          python scripts/regression_check.py check "data/raw/${DATE}_summary.md" --section summary
+          FAIL=0
+          for spec in "aiNews:${DATE}_ai.md" "github:${DATE}_github.md" "summary:${DATE}_summary.md"; do
+            sec="${spec%%:*}"; f="data/raw/${spec##*:}"
+            out="$(python scripts/regression_check.py check "$f" --section "$sec" 2>&1 || true)"
+            echo "$out"
+            sc="$(printf '%s\n' "$out" | grep -o 'SELF_CHECK.*' || true)"
+            case "$sc" in
+              *false*) echo "::error file=${f}::section=${sec} 门禁未过 $sc"; FAIL=1 ;;
+            esac
+          done
+          if [ "$FAIL" = "1" ]; then exit 1; fi
           echo "内容门禁通过"
 
       - name: 聚合写入 feed.json

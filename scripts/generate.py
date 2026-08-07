@@ -396,6 +396,101 @@ SUM_TMPL = """请为 {date} 撰写「每日资讯速览」。
 
 
 # --------------------------------------------------------------------------
+# AI 新闻 · 写盘前的日期排序兜底
+# 背景：门禁 regression_check 要求 aiNews 所有 ### 标题的日期严格倒序，
+# 但 LLM 偶尔不遵守（当日素材不足时会混排不同日期的旧闻），提示词无法 100% 约束。
+# 此函数在写盘前按标题日期做全局倒序重排，保证 order 断言稳定通过。
+# --------------------------------------------------------------------------
+AI_DATE_RE = re.compile(r"（(\d{4}-\d{2}-\d{2}|\d+月\d+日)）")
+
+
+def _ai_item_date(title, year):
+    m = AI_DATE_RE.search(title)
+    if not m:
+        return None
+    d = m.group(1)
+    if re.match(r"\d{4}-\d{2}-\d{2}", d):
+        return tuple(map(int, d.split("-")))
+    mm = re.match(r"(\d+)月(\d+)日", d)
+    if mm:
+        return (year, int(mm.group(1)), int(mm.group(2)))
+    return None
+
+
+def normalize_ai_order(md, date):
+    """把 aiNews 的 ### 条目按标题日期全局倒序重排。
+
+    - 保持「## 🔝 今日要闻」在前、「## 近期其他要闻」在后，今日要闻沿用其原有条数。
+    - 无日期条目不参与排序（门禁会跳过它们），保持原相对顺序放在末尾。
+    - 条目序号从 1 重新连续编号。
+    - 分区结构缺失时原样返回，交回门禁报错。
+    """
+    year = int(date.split("-")[0]) if date else None
+    lines = md.splitlines(keepends=True)
+    h_idx = [i for i, ln in enumerate(lines) if ln.strip().startswith("## 🔝 今日要闻")]
+    r_idx = [i for i, ln in enumerate(lines) if ln.strip().startswith("## 近期其他要闻")]
+    if not (h_idx and r_idx and r_idx[0] > h_idx[0]):
+        return md
+    hi, ri = h_idx[0], r_idx[0]
+
+    def blocks(seg):
+        out, cur = [], None
+        for ln in seg:
+            if ln.strip().startswith("### "):
+                if cur:
+                    out.append(cur)
+                cur = [ln]
+            elif cur is not None:
+                cur.append(ln)
+        if cur:
+            out.append(cur)
+        return out
+
+    head_blocks = blocks(lines[hi + 1:ri])
+    rest_blocks = blocks(lines[ri + 1:])
+
+    def sort_b(bs):
+        dated = [b for b in bs if _ai_item_date(b[0].strip(), year) is not None]
+        undated = [b for b in bs if _ai_item_date(b[0].strip(), year) is None]
+        dated.sort(key=lambda b: _ai_item_date(b[0].strip(), year), reverse=True)
+        return dated + undated
+
+    n_head = len(head_blocks)
+    ordered = sort_b(head_blocks + rest_blocks)
+    new_head, new_rest = ordered[:n_head], ordered[n_head:]
+
+    def renum(bs, start):
+        out, n = [], start
+        for b in bs:
+            new_first = re.sub(r"^\s*###\s+\d+[\.、]?\s*", "", b[0]).strip()
+            out.append(f"### {n}. {new_first}\n")
+            out.extend(b[1:])
+            n += 1
+        return out
+
+    prefix = "".join(lines[:hi])
+    head_title = "## 🔝 今日要闻\n"
+    rest_title = "## 近期其他要闻\n"
+    # 尾部仅保留「非条目块」的行（如末尾注释/空行），条目正文已由上面的块重建
+    block_line_ids = set()
+    for b in head_blocks + rest_blocks:
+        block_line_ids.update(id(ln) for ln in b)
+    tail_lines = []
+    for ln in lines[ri + 1:]:
+        if id(ln) not in block_line_ids:
+            tail_lines.append(ln)
+    tail = "".join(tail_lines)
+
+    out = prefix + head_title + "\n" + "".join(renum(new_head, 1))
+    if new_rest:
+        out = out.rstrip("\n") + "\n\n" + rest_title + "\n" + "".join(renum(new_rest, n_head + 1))
+    tail_stripped = tail.strip("\n")
+    if tail_stripped:
+        out = out.rstrip("\n") + "\n\n" + tail_stripped + "\n"
+    return out
+
+
+# --------------------------------------------------------------------------
 # 自检
 # --------------------------------------------------------------------------
 def self_check(section, md, date):
@@ -409,7 +504,7 @@ def self_check(section, md, date):
         else:
             # 只把结构性问题当作需要重试的硬伤
             for w in warns:
-                if any(k in w for k in ("缺少", "repo-desc", "since=", "通俗解释", "为空", "过短")):
+                if any(k in w for k in ("缺少", "repo-desc", "since=", "通俗解释", "为空", "过短", "时间序")):
                     problems.append(w)
     except Exception as e:
         print(f"  [提示] 自检模块加载失败，跳过结构校验：{e}")
@@ -478,6 +573,12 @@ def generate_section(section, date, cfg, api_key, guide, dry_run=False):
             md, problems = md2, p2
         if problems:
             print(f"  [警告] 修正后仍有：{'; '.join(problems)}（仍写盘，交由 filter.py 复核）")
+
+    if section == "aiNews":
+        norm = normalize_ai_order(md, date)
+        if norm != md:
+            print("  [排序兜底] 已按标题日期倒序重排 AI 新闻条目")
+            md = norm
 
     os.makedirs(RAW, exist_ok=True)
     out = os.path.join(RAW, SECTION_FILES[section].format(date=date))

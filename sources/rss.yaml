@@ -10,7 +10,6 @@
 feeds:
   # —— 产业与media（中文） ——
   - "量子位 || https://www.qbitai.com/feed || news"
-  - "36氪 || https://36kr.com/feed || news"
   - "InfoQ 中国 || https://www.infoq.cn/feed || news"
 
   # —— 产业与media（英文） ——
@@ -31,3 +30,4 @@ feeds:
 #   Hugging Face https://huggingface.co/blog/feed.xml → 连接被拒绝（网络不可达）
 #   Google Research https://research.google/blog/rss/ → 持续超时，已由 blog.google AI 频道替代
 #   VentureBeat AI https://venturebeat.com/category/ai/feed/ → 最新条目停留在 2026-05，内容陈旧
+#   36氪 https://36kr.com/feed                  → 返回 HTML 而非 RSS（2026-08-07 体检确认），订阅端点已失效
