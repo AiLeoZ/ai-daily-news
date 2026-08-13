@@ -8,7 +8,7 @@
   - 时间序提示（若检测到后面的日期比前面更近，打印警告，不强行重排）。
   - 按日期键聚合进 data/feed.json，aiNews / github / summary 三块互不覆盖。
 
-这是原 update_feed.py 的升级版（新增校验/去重/上限），旧脚本保留为兼容后备。
+这是原 update_feed.py 的升级版（新增校验/去重/上限），旧脚本已移除。
 
 用法：
   python3 scripts/filter.py --date 2026-08-03 --section aiNews \
@@ -161,7 +161,7 @@ def truncate(md, max_items):
     return "\n".join(head + kept).strip() + "\n"
 
 
-def aggregate(date, section, md, max_items):
+def aggregate(date, section, md):
     data = {"entries": {}}
     if os.path.exists(FEED_PATH):
         try:
@@ -193,7 +193,7 @@ def process_file(date, section, path, max_items):
     # 仅 AI 新闻应用 Top-N 截断；GitHub 表格保持完整
     if section == "aiNews" and count_items(md, section) > max_items:
         md = truncate(md, max_items)
-    aggregate(date, section, md, max_items)
+    aggregate(date, section, md)
     print(f"  已聚合 {date}/{section}（条目 {count_items(md, section)}）")
     return True
 

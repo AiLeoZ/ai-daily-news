@@ -104,39 +104,54 @@ AI_DEEP = (37, 99, 235)
 GH_C = (251, 176, 64)             # GitHub 橙
 GH_DEEP = (217, 119, 6)
 
-# 跨平台中文字体解析（macOS / Linux / 仓库内置，任一可用即停，不抛异常）
+# 跨平台中文字体解析：优先使用仓库内置字体（assets/fonts/），
+# 保证本地 macOS 与 GitHub Actions（Linux）渲染出完全一致的海报。
+# 仓库内约定放 Regular + Bold 两个独立文件；缺失时回退系统字体。
 def _resolve_font():
-    repo_fonts = sorted(glob.glob(os.path.join(ROOT, "assets", "fonts", "*.[to]tf")))
-    repo_fonts += sorted(glob.glob(os.path.join(ROOT, "assets", "fonts", "*.ttc")))
-    for path in repo_fonts:
-        yield (path, 0, 0, True)
+    # 1) 仓库内置字体优先：按文件名区分 Regular / Bold
+    font_dir = os.path.join(ROOT, "assets", "fonts")
+    regular = bold = None
+    if os.path.isdir(font_dir):
+        for fn in sorted(os.listdir(font_dir)):
+            low = fn.lower()
+            if not low.endswith((".ttf", ".otf", ".ttc")):
+                continue
+            p = os.path.join(font_dir, fn)
+            if "bold" in low:
+                bold = bold or p
+            else:
+                regular = regular or p
+    if regular:
+        yield (regular, 0, bold or regular, 0)
+        return
 
+    # 2) 系统字体兜底（仅当仓库未内置字体时）
     if sys.platform == "darwin":
         for path in [
             "/System/Library/Fonts/Hiragino Sans GB.ttc",
             "/System/Library/Fonts/PingFang.ttc",
             "/System/Library/Fonts/STHeiti Light.ttc",
         ]:
-            yield (path, 0, 1, False)
+            yield (path, 0, path, 1)
     else:
         for path in [
             "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
             "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
             "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
         ]:
-            yield (path, 0, 0, False)
+            yield (path, 0, path, 0)
         for path in sorted(glob.glob("/usr/share/fonts/**/*.[to]tf", recursive=True)):
-            yield (path, 0, 0, False)
+            yield (path, 0, path, 0)
 
 
 def _pick_font():
-    for path, ri, bi, _ in _resolve_font():
-        if not os.path.exists(path):
+    for fr_path, fr_idx, fb_path, fb_idx in _resolve_font():
+        if not fr_path or not os.path.exists(fr_path):
             continue
         try:
-            ImageFont.truetype(path, 20, index=ri)
-            print(f"[poster] 使用字体: {path}", file=sys.stderr)
-            return path, ri, path, bi
+            ImageFont.truetype(fr_path, 20, index=fr_idx)
+            print(f"[poster] 使用字体: {fr_path}（粗体: {fb_path}）", file=sys.stderr)
+            return fr_path, fr_idx, fb_path, fb_idx
         except Exception:
             continue
     print("[poster] 未找到可用的中文字体，海报文字可能显示异常", file=sys.stderr)

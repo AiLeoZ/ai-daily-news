@@ -493,7 +493,7 @@ def normalize_ai_order(md, date):
 def ensure_heading_spacing(md):
     # 格式兜底: 确保 ### 标题前有空行(修复LLM行内嵌入 & 行间缺空行)
     # 1) 行内嵌入: 非换行后紧跟 ### 标题 -> 拆出补空行
-    md = __import__("re").sub(r"([^\n])(###\s+\d+\.)\s*", r"\1\n\n\n\2 ", md)
+    md = re.sub(r"([^\n])(###\s+\d+\.)\s*", r"\1\n\n\n\2 ", md)
     # 2) 行间缺空行: ### 前行非空 -> 补空行
     lines = md.splitlines(keepends=True)
     out = []

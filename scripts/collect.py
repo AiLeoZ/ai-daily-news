@@ -191,16 +191,16 @@ def _fetch_feed(entry, cutoff, http):
     try:
         text, _ctype = fetch(url, **http)
     except Exception as e:
-        return name, [], {"source": name, "url": url,
+        return name, [], {"name": name, "url": url,
                           "error": f"{type(e).__name__}: {e}"}, {"name": name, "ok": False}
     if _looks_like_html(text):
-        return name, [], {"source": name, "url": url,
+        return name, [], {"name": name, "url": url,
                           "error": "源返回 HTML 而非 RSS/Atom，订阅地址可能已失效"}, \
                {"name": name, "ok": False}
     try:
         root = ET.fromstring(text)
     except ET.ParseError as e:
-        return name, [], {"source": name, "url": url,
+        return name, [], {"name": name, "url": url,
                           "error": f"XML 解析失败: {e}"}, {"name": name, "ok": False}
     items, seen = _extract_items(root, name, cutoff)
     return name, items, None, {
@@ -636,7 +636,7 @@ def main():
             msg += f" 来源={rss.get('sources_used')}"
         print(msg)
         for e in rss["errors"]:
-            print(f"   ! {e.get('source')}: {str(e.get('error'))[:90]}")
+            print(f"   ! {e.get('name')}: {str(e.get('error'))[:90]}")
 
     if args.github or do_all:
         gh = collect_github_offline(args.date) if offline else collect_github(args.date, http)
