@@ -185,6 +185,42 @@ def clean(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
+def parse_summary(md, point_limit=6, para_limit=4):
+    """解析速览模式摘要（summary.markdown）。
+
+    返回 (paragraphs, points)：
+      · paragraphs：摘要综述正文，按段落拆分，最多 para_limit 段
+      · points：关键要点列表，最多 point_limit 条
+    """
+    paragraphs, points = [], []
+    if not md:
+        return paragraphs, points
+    # 按「## 小节」切分：先找「## 摘要」正文、再找「## 关键要点」列表
+    sec = re.split(r"^##\s+", md, flags=re.M)
+    for block in sec[1:]:
+        title = (block.split("\n", 1)[0] if "\n" in block else block).strip()
+        body = block.split("\n", 1)[1] if "\n" in block else ""
+        if "摘要" in title or "总结" in title:
+            for para in re.split(r"\n\s*\n", body):
+                t = clean(para)
+                if t:
+                    paragraphs.append(t)
+                    if len(paragraphs) >= para_limit:
+                        break
+        elif "要点" in title or "亮点" in title or "速览" in title:
+            for line in body.split("\n"):
+                line = line.strip()
+                m = re.match(r"^[-*]\s+(.+)", line)
+                if not m:
+                    continue
+                t = clean(m.group(1))
+                if t:
+                    points.append(t)
+                    if len(points) >= point_limit:
+                        break
+    return paragraphs, points
+
+
 def parse_ai_news(md, limit=5):
     """海报 AI 要闻：仅保留完整标题（含日期标签），不抽取下方注解/简介。"""
     items = []
@@ -323,6 +359,25 @@ def measure_ai(items):
     return out
 
 
+def measure_summary(paragraphs, points, para_fs=24, point_fs=22):
+    """预先量出摘要区块内容高度（综述段落 + 关键要点）。
+
+    返回的高度 = 顶部留白(24) + 内容行高总和 + 底部留白(22)，
+    与 render() 中的绘制逻辑严格对齐，避免文字溢出卡片。
+    """
+    tx_w = W - PAD * 2 - 52
+    content_h = 0
+    for para in paragraphs:
+        lines = wrap(para, f(para_fs), tx_w, 12, ellipsis=True)
+        content_h += len(lines) * (para_fs + 12)
+    if points:
+        content_h += 22
+        for pt in points:
+            plines = wrap("· " + pt, f(point_fs), tx_w, 2, ellipsis=True)
+            content_h += len(plines) * (point_fs + 9)
+    return 24 + content_h + 22
+
+
 def measure_gh(items):
     out = []
     for it in items:
@@ -333,10 +388,17 @@ def measure_gh(items):
     return out
 
 
-def render(date, ai_items, gh_items, out_path, qr_url=None):
+def render(date, ai_items, gh_items, out_path, qr_url=None, summary=None):
     ai_m = measure_ai(ai_items)
     gh_m = measure_gh(gh_items)
-    total = (HEAD_H + 34 + SEC_H + sum(m[1] + CARD_GAP for m in ai_m)
+    if summary:
+        sum_paragraphs, sum_points = summary
+        sum_h = measure_summary(sum_paragraphs, sum_points)
+    else:
+        sum_h = 0
+    total = (HEAD_H + 34
+             + (SEC_H + sum_h + CARD_GAP + 34 if summary else 0)
+             + SEC_H + sum(m[1] + CARD_GAP for m in ai_m)
              + 30 + SEC_H + sum(m[3] + CARD_GAP for m in gh_m) + 24 + FOOT_H)
 
     img = vgradient((W, total), BG_TOP, BG_BOT).convert("RGBA")
@@ -375,6 +437,30 @@ def render(date, ai_items, gh_items, out_path, qr_url=None):
                             radius=19, fill=(255, 255, 255, 16), outline=color, width=1)
         d.text((W - PAD - bw - 15, y + 15), badge, font=f(22, True), fill=color)
         return y + SEC_H
+
+    # ================= 今日摘要区块（速览模式的摘要，置于 AI 要闻之前）
+    if summary:
+        sum_paragraphs, sum_points = summary
+        y = section(y, (167, 139, 250), "今日摘要", "速览")
+        # 综述段落卡片
+        sum_tx = PAD + 26
+        sum_tw = W - PAD * 2 - 52
+        card_h = measure_summary(sum_paragraphs, sum_points)
+        d.rounded_rectangle([PAD, y, W - PAD, y + card_h], radius=20,
+                            fill=CARD, outline=CARD_LINE, width=1)
+        d.rounded_rectangle([PAD, y + 18, PAD + 5, y + card_h - 18], radius=3, fill=(167, 139, 250))
+        ty = y + 24
+        for para in sum_paragraphs:
+            for line in wrap(para, f(24), sum_tw, 12, ellipsis=True):
+                d.text((sum_tx, ty), line, font=f(24), fill=SUB)
+                ty += 36
+        if sum_points:
+            ty += 22
+            for pt in sum_points:
+                for line in wrap("· " + pt, f(22), sum_tw, 2, ellipsis=True):
+                    d.text((sum_tx, ty), line, font=f(22), fill=(196, 182, 240))
+                    ty += 31
+        y += card_h + CARD_GAP + 34
 
     y = section(y, AI_C, "近期 AI 要闻", "%d 条" % len(ai_items))
 
@@ -437,13 +523,14 @@ def render(date, ai_items, gh_items, out_path, qr_url=None):
 
 
 def generate_poster(date=None, out_path=None, qr_url=None, ai_limit=10,
-                    gh_limit=3, copy_latest=True):
+                    gh_limit=3, copy_latest=True, with_summary=True):
     """生成单张海报（可复用，供 fix_poster_qr.py 批量调用）。
 
     date        : YYYY-MM-DD，默认取 feed.json 最新一天
     out_path    : 输出 PNG 路径，默认 output/poster/<date>.png
     qr_url      : 二维码跳转地址；为 None 时按 qr_url_for(date) 自动计算
     copy_latest : 是否同步写入 output/poster/latest.png（仅当日海报需要）
+    with_summary: 是否在 AI 要闻之前插入「今日摘要」区块（速览模式摘要）
     返回 (path, size, qr_url)
     """
     date, entry = read_feed(date)
@@ -454,17 +541,26 @@ def generate_poster(date=None, out_path=None, qr_url=None, ai_limit=10,
     if len(ai_items) < 1 or len(gh_items) < 1:
         raise SystemExit("解析失败：AI %d 条 / GitHub %d 条" % (len(ai_items), len(gh_items)))
 
+    summary = None
+    if with_summary:
+        sum_md = (entry.get("summary") or {}).get("markdown", "")
+        paras, _ = parse_summary(sum_md)
+        if paras:
+            summary = (paras, [])
+
     if qr_url is None:
         qr_url = qr_url_for(date)
     out = out_path or os.path.join(OUT_DIR, "%s.png" % date)
-    path, size = render(date, ai_items, gh_items, out, qr_url=qr_url)
+    path, size = render(date, ai_items, gh_items, out, qr_url=qr_url, summary=summary)
 
     if copy_latest:
         latest = os.path.join(OUT_DIR, "latest.png")
         Image.open(path).save(latest, "PNG", optimize=True)
 
-    print("[poster] 日期 %s | AI %d 条 | GitHub %d 条 | 二维码 -> %s"
-          % (date, len(ai_items), len(gh_items), qr_url))
+    print("[poster] 日期 %s | AI %d 条 | GitHub %d 条 | 摘要 %s | 二维码 -> %s"
+          % (date, len(ai_items), len(gh_items),
+             ("含 %d 段 / %d 要点" % (len(summary[0]), len(summary[1])) if summary else "无"),
+             qr_url))
     for i, it in enumerate(ai_items, 1):
         print("   AI %d. %s" % (i, it["title"][:34]))
     for it in gh_items:
