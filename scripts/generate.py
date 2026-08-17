@@ -558,16 +558,22 @@ def ensure_heading_spacing(md):
 
 
 def normalize_github_rows(md):
-    """GitHub 板块兜底：为项目列缺失 repo-desc 的行自动补全简介，保证门禁稳定通过。
+    """GitHub 板块兜底：补全缺 repo-desc 的项目列 + 截断超出 10 行的数据行。
 
-    LLM 偶尔生成的表格会漏掉 repo-desc 标签（regression_check 要求每行项目列含 repo-desc），
-    此函数扫描表格行，对缺 repo-desc 的行从「注解」列截取一段作为简介补上，
-    与已有 normalize_ai_order 兜底机制保持对称，避免单次生成失败阻塞整条流水线。
+    LLM 偶发生成的表格会漏掉 repo-desc 标签，或每榜写出超过 10 行。
+    regression_check 要求每行项目列含 repo-desc 且每榜恰好 [10,10] 行。
+    此函数按榜单分区扫描：补全 repo-desc、丢弃超出 10 行的数据行。
     仅作用于数据行，自动跳过表头行与分隔行（与 regression_check.parse_md 行为一致）。
     """
     out = []
+    data_rows = 0  # 当前榜单已保留的数据行数（每榜上限 10，对应 spec 的 rows_max）
     for line in md.splitlines():
         s = line.rstrip()
+        # 榜单分区标题（## 一、/ ## 二、）：重置行计数
+        if s.lstrip().startswith("## "):
+            data_rows = 0
+            out.append(line)
+            continue
         if not s.lstrip().startswith("|"):
             out.append(line)
             continue
@@ -576,14 +582,18 @@ def normalize_github_rows(md):
             out.append(line)
             continue
         cells = [c.strip() for c in parts if c.strip() != ""]
-        # 跳过分隔行（每格都是 --- / :---: 等）
+        # 分隔行（每格都是 --- / :---: 等）
         if cells and all(re.match(r"^:?-+:?$", c) for c in cells):
             out.append(line)
             continue
-        # 跳过表头行（第一列为「排名」）
+        # 表头行（第一列为「排名」）
         if parts[1].strip() == "排名":
             out.append(line)
             continue
+        # 数据行：超出 10 行直接丢弃（多写可确定性截断，漏写交由重试闭环补足）
+        if data_rows >= 10:
+            continue
+        data_rows += 1
         proj_cell = parts[2]
         if "repo-desc" in proj_cell:
             out.append(line)
@@ -594,42 +604,55 @@ def normalize_github_rows(md):
         parts[2] = f'{proj_cell}<br><span class="repo-desc">{desc}</span>'
         out.append("|".join(parts))
     return "\n".join(out)
-    lines = md.splitlines(keepends=True)
-    out = []
-    for ln in lines:
-        if ln.strip().startswith("### ") and out and out[-1].strip() != "":
-            out.append("\n")
-        out.append(ln)
-    return "".join(out)
+
+
+def apply_normalize(section, md, date):
+    """写盘前确定性兜底：标题空行规整 → 排序 → 条数/行数截断 → repo-desc 补全。
+
+    顺序有讲究：必须先 ensure_heading_spacing 拆开「行内嵌入的 ### 标题」，
+    否则后续按行首 ### 识别的排序/计数兜底会漏判。
+    这些是「可确定性修复」的格式问题，无需 LLM 重试即可规整；
+    「不可确定性修复」的（如缺为什么关注/注解、含禁语）交由 gate_check 反馈 + 重试闭环处理。
+    """
+    md = ensure_heading_spacing(md)
+    if section == "aiNews":
+        norm = normalize_ai_order(md, date)
+        if norm != md:
+            print("  [排序兜底] 已按标题日期倒序重排 AI 新闻条目")
+            md = norm
+        norm = normalize_ai_count(md)
+        if norm != md:
+            md = norm
+    elif section == "github":
+        norm = normalize_github_rows(md)
+        if norm != md:
+            print("  [补全兜底] 已补全 repo-desc 并截断超出 10 行的数据行")
+            md = norm
+    return md
 
 
 # --------------------------------------------------------------------------
 # 自检
 # --------------------------------------------------------------------------
-def self_check(section, md, date):
-    """复用 filter.py 的校验逻辑，返回问题列表。"""
-    problems = []
+def gate_check(section, md, date):
+    """用权威门禁 regression_check 的同一套判据自检，返回失败项描述列表。
+
+    与旧 self_check（底层 filter.validate 恒返回 True，判据过弱）不同，
+    本函数直接复用发布阶段阻断门禁 regression_check.run_section 的判据，
+    确保「生成阶段认为通过」==「发布门禁通过」，从根源消除判据分裂。
+    """
     try:
-        import filter as filter_mod
-        ok, warns = filter_mod.validate(md, 10, section, date)
-        if not ok:
-            problems.extend(warns)
-        else:
-            # 只把结构性问题当作需要重试的硬伤
-            for w in warns:
-                if any(k in w for k in ("缺少", "repo-desc", "since=", "通俗解释", "为空", "过短", "时间序")):
-                    problems.append(w)
+        import regression_check as rc
+        spec = rc.load_spec(os.path.join(ROOT, "config", "consistency-spec.json"))
+        fails = []
+        for r in rc.run_section(section, md, spec, date):
+            if not r["pass"]:
+                detail = f"（{r['detail']}）" if r.get("detail") else ""
+                fails.append(f"{r['desc']}{detail}")
+        return fails
     except Exception as e:
-        print(f"  [提示] 自检模块加载失败，跳过结构校验：{e}")
-    if section == "aiNews":
-        n = len(re.findall(r"^###\s", md, re.M))
-        if n < 8:
-            problems.append(f"AI 新闻仅 {n} 条，少于 8 条下限")
-    if section == "github":
-        rows = len(re.findall(r"^\|\s*\d+\s*\|", md, re.M))
-        if rows < 12:
-            problems.append(f"表格数据行仅 {rows} 行，两榜合计应约 20 行")
-    return problems
+        print(f"  [提示] 门禁自检加载失败，跳过校验：{e}")
+        return []
 
 
 # --------------------------------------------------------------------------
@@ -673,34 +696,24 @@ def generate_section(section, date, cfg, api_key, guide, dry_run=False):
         return True
 
     md = strip_fence(call_llm(cfg, api_key, system, user))
-    problems = self_check(section, md, date)
 
-    if problems:
-        print(f"  [自检未过] {'; '.join(problems)}")
-        print("  [修正] 带着问题重试一次 ...")
+    # 兜底 + 权威门禁闭环：先做确定性兜底，再按门禁失败项带反馈重试（最多 2 次）
+    md = apply_normalize(section, md, date)
+    fails = gate_check(section, md, date)
+    retries = 2
+    while fails and retries > 0:
+        retries -= 1
+        print(f"  [门禁未过，剩余修正 {retries}] {'; '.join(fails)}")
         fix = (user + "\n\n## 上一版存在以下问题，请修正后重新输出完整 Markdown\n\n"
-               + "\n".join(f"- {p}" for p in problems))
-        md2 = strip_fence(call_llm(cfg, api_key, system, fix))
-        p2 = self_check(section, md2, date)
-        if len(p2) <= len(problems):
-            md, problems = md2, p2
-        if problems:
-            print(f"  [警告] 修正后仍有：{'; '.join(problems)}（仍写盘，交由 filter.py 复核）")
+               + "\n".join(f"- {p}" for p in fails))
+        md = strip_fence(call_llm(cfg, api_key, system, fix))
+        md = apply_normalize(section, md, date)
+        fails = gate_check(section, md, date)
 
-    if section == "aiNews":
-        norm = normalize_ai_order(md, date)
-        if norm != md:
-            print("  [排序兜底] 已按标题日期倒序重排 AI 新闻条目")
-            md = norm
-        norm = normalize_ai_count(md)
-        if norm != md:
-            md = norm
-    if section == "github":
-        norm = normalize_github_rows(md)
-        if norm != md:
-            print("  [补全兜底] 已为缺 repo-desc 的项目列自动补全简介")
-            md = norm
-    md = ensure_heading_spacing(md)
+    if fails:
+        print(f"  [警告] 门禁仍有 {len(fails)} 项未过（写盘后由发布门禁如实拦截）：{'; '.join(fails)}")
+    else:
+        print("  [门禁通过] 生成内容已通过权威校验")
 
     os.makedirs(RAW, exist_ok=True)
     out = os.path.join(RAW, SECTION_FILES[section].format(date=date))
