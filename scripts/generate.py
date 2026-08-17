@@ -490,6 +490,59 @@ def normalize_ai_order(md, date):
     return out
 
 
+def normalize_ai_count(md):
+    """AI 新闻条目数兜底：截断超出 item_max 的多余条目，保证门禁稳定通过。
+
+    regression_check 要求 aiNews 的 ### 条目数在 [item_min, item_max]（默认 [8,10]），
+    LLM 偶发超出上限导致门禁判 aiNews-count: false。
+    此函数从末尾截断超限条目（优先裁「近期其他要闻」），保留「今日要闻」完整。
+    条目不足下限仅记录警告（无法凭空生成内容），交由门禁如实报告。
+    """
+    import json as _json, os as _os
+    _spec_path = _os.path.join(_os.path.dirname(__file__), "..", "config", "consistency-spec.json")
+    try:
+        with open(_spec_path, "r", encoding="utf-8") as _f:
+            _spec = _json.load(_f)
+        _cfg = _spec["sections"].get("aiNews", {})
+        _min = _cfg.get("item_min")
+        _max = _cfg.get("item_max")
+    except Exception:
+        return md
+
+    if _max is None:
+        return md
+
+    lines = md.splitlines()
+    # 找所有 h3 条目标题行号
+    h3_positions = [i for i, ln in enumerate(lines) if re.match(r"^###\s+\d+[\.、]?\s+", ln.strip())]
+    n = len(h3_positions)
+
+    if n <= _max:
+        if _min is not None and n < _min:
+            print(f"  [计数警告] AI 新闻条目数 {n} < 下限 {_min}，无法自动补全", file=sys.stderr)
+        return md
+
+    # 超出上限：保留前 _max 个 h3 块，丢弃后续全部内容
+    keep_until = h3_positions[_max - 1]  # 保留到最后一个合法 h3 行
+    # 找到该 h3 块的结束位置(下一个 ## / ### 或文件末尾)
+    end = keep_until + 1
+    while end < len(lines):
+        if re.match(r"^(##|###)\s", lines[end].strip()):
+            break
+        end += 1
+
+    result = "\n".join(lines[:end]) + "\n"
+    # 重编号
+    out_lines = result.splitlines()
+    seq = 1
+    for i, ln in enumerate(out_lines):
+        if re.match(r"^###\s+\d+[\.、]?\s*", ln.strip()):
+            out_lines[i] = re.sub(r"^(\s*###\s+)\d+[\.、]?\s*", rf"\g<1>{seq}. ", ln)
+            seq += 1
+    print(f"  [截断兜底] AI 新闻 {n} 条 -> {seq - 1} 条（上限 {_max}）", file=sys.stderr)
+    return "\n".join(out_lines) + "\n"
+
+
 def ensure_heading_spacing(md):
     # 格式兜底: 确保 ### 标题前有空行(修复LLM行内嵌入 & 行间缺空行)
     # 1) 行内嵌入: 非换行后紧跟 ### 标题 -> 拆出补空行
@@ -638,6 +691,9 @@ def generate_section(section, date, cfg, api_key, guide, dry_run=False):
         norm = normalize_ai_order(md, date)
         if norm != md:
             print("  [排序兜底] 已按标题日期倒序重排 AI 新闻条目")
+            md = norm
+        norm = normalize_ai_count(md)
+        if norm != md:
             md = norm
     if section == "github":
         norm = normalize_github_rows(md)
