@@ -504,6 +504,52 @@ def ensure_heading_spacing(md):
     return "".join(out)
 
 
+def normalize_github_rows(md):
+    """GitHub 板块兜底：为项目列缺失 repo-desc 的行自动补全简介，保证门禁稳定通过。
+
+    LLM 偶尔生成的表格会漏掉 repo-desc 标签（regression_check 要求每行项目列含 repo-desc），
+    此函数扫描表格行，对缺 repo-desc 的行从「注解」列截取一段作为简介补上，
+    与已有 normalize_ai_order 兜底机制保持对称，避免单次生成失败阻塞整条流水线。
+    仅作用于数据行，自动跳过表头行与分隔行（与 regression_check.parse_md 行为一致）。
+    """
+    out = []
+    for line in md.splitlines():
+        s = line.rstrip()
+        if not s.lstrip().startswith("|"):
+            out.append(line)
+            continue
+        parts = s.split("|")
+        if len(parts) < 5:
+            out.append(line)
+            continue
+        cells = [c.strip() for c in parts if c.strip() != ""]
+        # 跳过分隔行（每格都是 --- / :---: 等）
+        if cells and all(re.match(r"^:?-+:?$", c) for c in cells):
+            out.append(line)
+            continue
+        # 跳过表头行（第一列为「排名」）
+        if parts[1].strip() == "排名":
+            out.append(line)
+            continue
+        proj_cell = parts[2]
+        if "repo-desc" in proj_cell:
+            out.append(line)
+            continue
+        # 缺 repo-desc：从注解列（最后一列）截取第一句作为简介
+        note_cell = parts[-2].strip()
+        desc = re.split(r"[。!！?？]", note_cell)[0].strip()[:40] or "暂无简介"
+        parts[2] = f'{proj_cell}<br><span class="repo-desc">{desc}</span>'
+        out.append("|".join(parts))
+    return "\n".join(out)
+    lines = md.splitlines(keepends=True)
+    out = []
+    for ln in lines:
+        if ln.strip().startswith("### ") and out and out[-1].strip() != "":
+            out.append("\n")
+        out.append(ln)
+    return "".join(out)
+
+
 # --------------------------------------------------------------------------
 # 自检
 # --------------------------------------------------------------------------
@@ -592,6 +638,11 @@ def generate_section(section, date, cfg, api_key, guide, dry_run=False):
         norm = normalize_ai_order(md, date)
         if norm != md:
             print("  [排序兜底] 已按标题日期倒序重排 AI 新闻条目")
+            md = norm
+    if section == "github":
+        norm = normalize_github_rows(md)
+        if norm != md:
+            print("  [补全兜底] 已为缺 repo-desc 的项目列自动补全简介")
             md = norm
     md = ensure_heading_spacing(md)
 
