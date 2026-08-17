@@ -24,7 +24,7 @@
       "weekly_marker": "本周新增",
       "daily_columns": ["排名", "项目", "今日新增 Star", "注解"],
       "weekly_columns": ["排名", "项目", "总 Star", "本周新增", "注解"],
-      "rows_min": 10,
+      "rows_min": 5,
       "rows_max": 10,
       "project_cell_must_contain": "repo-desc"
     },
